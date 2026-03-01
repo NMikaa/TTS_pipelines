@@ -1,0 +1,3 @@
+[submodule "pocket-tts"]
+	path = pocket-tts
+	url = https://github.com/kyutai-labs/pocket-tts.git

@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data (too large for git)
+cv-corpus-*/
+*.wav
+*.mp3
+*.flac
+latents_cache/
+alignment/outputs/
+alignments.json
+
+# Model weights & checkpoints
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+*.nemo
+models/
+
+# Logs
+logs/
+runs/
+wandb/
+*.log
+
+# Archives & large files
+*.rar
+*.zip
+*.tar.gz
+*.parquet
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NeMo (large toolkit, cloned for alignment only)
+NeMo/
+
+# Misc
+tmp.py
+.env
