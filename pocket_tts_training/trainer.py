@@ -351,6 +351,15 @@ class PocketTTSTrainer:
             self.flow_lm.parameters(), self.config.gradient_clip
         )
 
+        # Skip step if gradients are NaN/Inf to avoid corrupting weights
+        grad_norm_val = grad_norm.item() if isinstance(grad_norm, torch.Tensor) else grad_norm
+        if not math.isfinite(grad_norm_val):
+            logger.warning(f"Non-finite grad_norm ({grad_norm_val:.4f}), skipping optimizer step")
+            self.optimizer.zero_grad()
+            if self.scaler:
+                self.scaler.update()
+            return grad_norm_val
+
         if self.scaler:
             self.scaler.step(self.optimizer)
             self.scaler.update()
@@ -364,7 +373,7 @@ class PocketTTSTrainer:
         if self.global_step >= self.config.ema_start_step:
             self.ema.update(self.flow_lm)
 
-        return grad_norm.item() if isinstance(grad_norm, torch.Tensor) else grad_norm
+        return grad_norm_val
 
     def train_epoch(self, epoch: int) -> dict:
         """Train for one epoch."""
@@ -416,7 +425,8 @@ class PocketTTSTrainer:
         logger.info(f"Config: {self.config}")
         logger.info(f"Effective batch size: {self.config.effective_batch_size}")
 
-        for epoch in range(self.config.num_epochs):
+        start_epoch = self.epoch + 1 if self.epoch > 0 else 0
+        for epoch in range(start_epoch, self.config.num_epochs):
             self.epoch = epoch
             metrics = self.train_epoch(epoch)
 

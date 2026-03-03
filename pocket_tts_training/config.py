@@ -20,7 +20,7 @@ class TrainingConfig:
     # --- Optimization ---
     batch_size: int = 16
     gradient_accumulation_steps: int = 1
-    learning_rate: float = 3e-4
+    learning_rate: float = 1e-4
     min_lr: float = 1e-5
     weight_decay: float = 0.1
     warmup_steps: int = 500

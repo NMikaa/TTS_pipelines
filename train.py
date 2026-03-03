@@ -7,7 +7,7 @@ Usage:
     python scripts/precompute_latents.py --manifest alignment/voice_actor_manifest.json
 
     # Step 2: Train
-    python train.py --batch-size 16 --num-epochs 10 --lr 3e-4
+    python train.py --batch-size 16 --num-epochs 10 --lr 1e-4
 
     # Resume from checkpoint
     python train.py --resume checkpoints/pocket_tts_georgian/epoch_3.pt
@@ -34,7 +34,7 @@ def main():
 
     # Training
     parser.add_argument("--batch-size", type=int, default=16)
-    parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--num-epochs", type=int, default=10)
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--grad-accum", type=int, default=1, help="Gradient accumulation steps")
@@ -94,7 +94,7 @@ def main():
 
     if torch.cuda.is_available():
         gpu = torch.cuda.get_device_name(0)
-        mem = torch.cuda.get_device_properties(0).total_mem / 1e9
+        mem = torch.cuda.get_device_properties(0).total_memory / 1e9
         print(f"  GPU:          {gpu} ({mem:.1f} GB)")
     print("=" * 60)
 
