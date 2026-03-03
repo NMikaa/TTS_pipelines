@@ -33,6 +33,7 @@ def load_finetuned_model(
     use_ema: bool = True,
     temp: float = 0.7,
     lsd_steps: int = 1,
+    georgian_spm: str = "",
 ) -> TTSModel:
     """Load pretrained Pocket TTS and replace FlowLM weights with fine-tuned checkpoint."""
     print("Loading pretrained Pocket TTS model...")
@@ -42,10 +43,25 @@ def load_finetuned_model(
         lsd_decode_steps=lsd_steps,
     )
 
+    # Extend tokenizer + embedding for Georgian if provided
+    if georgian_spm and Path(georgian_spm).exists():
+        from pocket_tts_training.tokenizer import GeorgianTokenizer, extend_embedding
+
+        print(f"Loading Georgian tokenizer from {georgian_spm}...")
+        conditioner = model.flow_lm.conditioner
+        original_sp = conditioner.tokenizer.sp
+        georgian_tok = GeorgianTokenizer(original_sp, georgian_spm)
+        conditioner.tokenizer = georgian_tok
+
+        # Extend embedding to match checkpoint dimensions
+        old_embed = conditioner.embed
+        new_embed = extend_embedding(old_embed, georgian_tok._georgian_vocab_size)
+        conditioner.embed = new_embed
+
     print(f"Loading fine-tuned weights from {checkpoint_path}...")
     ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
 
-    # Load fine-tuned FlowLM weights (includes emb_mean, emb_std buffers)
+    # Load fine-tuned FlowLM weights (includes extended embedding if Georgian was used)
     model.flow_lm.load_state_dict(ckpt["flow_lm_state_dict"], strict=True)
     print(f"  Loaded checkpoint from epoch {ckpt['epoch']}, step {ckpt['global_step']}")
 
@@ -105,7 +121,7 @@ def generate(
 def main():
     parser = argparse.ArgumentParser(description="Pocket TTS inference with fine-tuned weights")
     parser.add_argument("--text", required=True, help="Text to synthesize")
-    parser.add_argument("--checkpoint", default="checkpoints/pocket_tts_georgian/epoch_5.pt",
+    parser.add_argument("--checkpoint", default="checkpoints/epoch_41_best.pt",
                         help="Path to fine-tuned checkpoint")
     parser.add_argument("--voice", default="alba",
                         help="Voice name (alba, marius, javert, jean, fantine, cosette, eponine, azelma) or path to WAV")
@@ -113,6 +129,7 @@ def main():
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-finetune", action="store_true", help="Use original pretrained weights only")
     parser.add_argument("--no-ema", action="store_true", help="Don't use EMA weights")
+    parser.add_argument("--georgian-spm", default="", help="Path to Georgian SentencePiece model")
     parser.add_argument("--temp", type=float, default=0.7,
                         help="Sampling temperature (paper default: 0.7)")
     parser.add_argument("--lsd-steps", type=int, default=1,
@@ -137,6 +154,7 @@ def main():
             use_ema=not args.no_ema,
             temp=args.temp,
             lsd_steps=args.lsd_steps,
+            georgian_spm=args.georgian_spm,
         )
 
     generate(model, args.text, voice=args.voice, output_path=args.output, device=args.device)

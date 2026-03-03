@@ -31,6 +31,7 @@ def main():
     # Data
     parser.add_argument("--latents-dir", default="latents_cache", help="Pre-computed latents directory")
     parser.add_argument("--manifest", default="alignment/voice_actor_manifest.json")
+    parser.add_argument("--georgian-spm", default="", help="Path to Georgian SentencePiece model")
 
     # Training
     parser.add_argument("--batch-size", type=int, default=16)
@@ -67,6 +68,7 @@ def main():
     config = TrainingConfig(
         manifest_path=args.manifest,
         latents_dir=args.latents_dir,
+        georgian_spm_path=args.georgian_spm,
         batch_size=args.batch_size,
         learning_rate=args.lr,
         num_epochs=args.num_epochs,

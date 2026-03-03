@@ -131,6 +131,10 @@ class PocketTTSTrainer:
         self.transformer = self.flow_lm.transformer
         self.text_conditioner = self.flow_lm.conditioner
 
+        # Extend tokenizer + embedding for Georgian if configured
+        if self.config.georgian_spm_path:
+            self._init_georgian_tokenizer()
+
         # Load normalization stats from pre-computed latents
         stats_path = Path(self.config.latents_dir) / "normalization_stats.pt"
         if stats_path.exists():
@@ -147,6 +151,25 @@ class PocketTTSTrainer:
         trainable = sum(p.numel() for p in self.flow_lm.parameters() if p.requires_grad)
         total = sum(p.numel() for p in self.flow_lm.parameters())
         logger.info(f"Trainable parameters: {trainable:,} / {total:,}")
+
+    def _init_georgian_tokenizer(self):
+        """Extend the tokenizer and embedding table for Georgian."""
+        from pocket_tts_training.tokenizer import GeorgianTokenizer, extend_embedding
+
+        spm_path = self.config.georgian_spm_path
+        logger.info(f"Loading Georgian tokenizer from {spm_path}...")
+
+        # Wrap the original SPM with the Georgian tokenizer
+        original_sp = self.text_conditioner.tokenizer.sp
+        georgian_tok = GeorgianTokenizer(original_sp, spm_path)
+
+        # Replace the tokenizer on the conditioner
+        self.text_conditioner.tokenizer = georgian_tok
+
+        # Extend the embedding table
+        old_embed = self.text_conditioner.embed
+        new_embed = extend_embedding(old_embed, georgian_tok._georgian_vocab_size)
+        self.text_conditioner.embed = new_embed.to(self.device)
 
     def _get_param_groups(self):
         """Separate parameters for weight decay (no decay on biases, norms, embeddings)."""

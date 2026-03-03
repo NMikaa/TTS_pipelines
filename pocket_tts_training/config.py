@@ -16,6 +16,7 @@ class TrainingConfig:
     # --- Model ---
     input_proj_weights_path: str = "quantizer_input_proj_weight.safetensors"
     pretrained_model_variant: str = "b6369a24"
+    georgian_spm_path: str = ""  # Path to Georgian SentencePiece model (empty = use byte fallback)
 
     # --- Optimization ---
     batch_size: int = 16
