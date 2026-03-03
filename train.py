@@ -44,6 +44,7 @@ def main():
     # Loss
     parser.add_argument("--fm-ratio", type=float, default=0.75, help="Flow matching ratio (vs LSD)")
     parser.add_argument("--hbm", type=int, default=4, help="Head batch multiplier")
+    parser.add_argument("--eos-weight", type=float, default=0.1, help="EOS loss weight")
 
     # System
     parser.add_argument("--num-workers", type=int, default=4)
@@ -75,6 +76,7 @@ def main():
         gradient_clip=args.gradient_clip,
         fm_ratio=args.fm_ratio,
         head_batch_multiplier=args.hbm,
+        eos_loss_weight=args.eos_weight,
         num_workers=args.num_workers,
         seed=args.seed,
         output_dir=args.output_dir,

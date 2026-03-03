@@ -22,6 +22,7 @@ from pathlib import Path
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.optim import AdamW
 from torch.amp import GradScaler, autocast
 from torch.utils.tensorboard import SummaryWriter
@@ -287,6 +288,44 @@ class PocketTTSTrainer:
 
         return conditioning, mask
 
+    def _compute_eos_loss(
+        self,
+        conditioning: torch.Tensor,
+        mask: torch.Tensor,
+    ) -> tuple[torch.Tensor, dict]:
+        """Compute EOS loss to keep the EOS probe calibrated during fine-tuning.
+
+        Supervises out_eos to predict 1 at the last valid frame of each sequence
+        and 0 at all other valid frames.
+
+        Args:
+            conditioning: [B, S, d_model] transformer outputs (after out_norm)
+            mask: [B, S] boolean mask for valid positions
+
+        Returns:
+            eos_loss: scalar loss
+            metrics: dict with eos_loss value
+        """
+        B, S, _ = conditioning.shape
+
+        # EOS logits: [B, S, 1] -> [B, S]
+        eos_logits = self.flow_lm.out_eos(conditioning).squeeze(-1)
+
+        # Build EOS targets: 1.0 at last valid frame, 0.0 elsewhere
+        # Find the last valid index per batch element
+        lengths = mask.sum(dim=1).long()  # [B]
+        eos_targets = torch.zeros(B, S, device=conditioning.device)
+        for i in range(B):
+            if lengths[i] > 0:
+                eos_targets[i, lengths[i] - 1] = 1.0
+
+        # BCE loss only on valid (masked) positions
+        mask_float = mask.float()
+        bce = F.binary_cross_entropy_with_logits(eos_logits, eos_targets, reduction="none")
+        eos_loss = (bce * mask_float).sum() / mask_float.sum().clamp(min=1)
+
+        return eos_loss, {"eos_loss": eos_loss.item()}
+
     def train_step(self, batch: dict) -> dict:
         """Single training step with gradient accumulation support.
 
@@ -310,6 +349,9 @@ class PocketTTSTrainer:
                 latents_flow, text_tokens, mask
             )
 
+            # EOS loss: supervise out_eos probe to stay calibrated
+            eos_loss, eos_metrics = self._compute_eos_loss(conditioning, target_mask)
+
             # Flatten for loss: [B*S, dim] with masking
             target_flat = latents_flow.reshape(B * S, D)  # [B*S, 32]
             cond_flat = conditioning.reshape(B * S, -1)   # [B*S, d_model]
@@ -323,12 +365,15 @@ class PocketTTSTrainer:
                 mask_flat = mask_flat.repeat(hbm)
 
             # Compute LSD loss
-            loss, metrics = self.lsd_loss(
+            lsd_loss, metrics = self.lsd_loss(
                 flow_net=self.flow_net,
                 x_data=target_flat,
                 conditioning=cond_flat,
                 mask=mask_flat,
             )
+
+            # Combined loss
+            loss = lsd_loss + self.config.eos_loss_weight * eos_loss
 
             # Scale loss for gradient accumulation
             loss = loss / self.config.gradient_accumulation_steps
@@ -339,6 +384,7 @@ class PocketTTSTrainer:
         else:
             loss.backward()
 
+        metrics.update(eos_metrics)
         return metrics
 
     def _optimizer_step(self):

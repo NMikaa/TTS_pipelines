@@ -32,6 +32,7 @@ class TrainingConfig:
     # --- LSD Loss ---
     fm_ratio: float = 0.75  # 75% flow matching, 25% LSD
     head_batch_multiplier: int = 4
+    eos_loss_weight: float = 0.1  # Weight for EOS probe supervision
 
     # --- EMA ---
     ema_decay: float = 0.9999
