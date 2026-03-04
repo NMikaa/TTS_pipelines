@@ -1,0 +1,5 @@
+# Orpheus TTS pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+orpheus-speech
+unsloth

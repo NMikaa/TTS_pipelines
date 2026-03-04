@@ -1,0 +1,6 @@
+# Qwen3-TTS pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+transformers>=4.45.0
+accelerate>=0.30.0
+peft>=0.10.0

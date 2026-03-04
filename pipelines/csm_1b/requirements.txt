@@ -1,0 +1,6 @@
+# CSM-1B pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+transformers>=4.40.0
+datasets>=2.18.0
+unsloth

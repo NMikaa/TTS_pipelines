@@ -1,0 +1,8 @@
+# F5-TTS pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+# F5-TTS
+f5-tts
+
+# Training
+accelerate>=0.25.0

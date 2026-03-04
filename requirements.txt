@@ -1,20 +1,26 @@
-# Common
+# Shared dependencies (install these first, then pipeline-specific deps)
+
+# Core
 torch>=2.1.0
 torchaudio>=2.1.0
 tqdm>=4.60
-tensorboard>=2.15
+
+# Data
 boto3>=1.34
-
-# Pocket TTS
-sentencepiece>=0.2.0
-safetensors>=0.4.0
-pydantic>=2.0
-beartype>=0.18.0
-PyYAML>=6.0
-
-# CSM-1B
-transformers>=4.40.0
 datasets>=2.18.0
-unsloth
-pandas>=2.0
-soundfile>=0.12
+
+# Evaluation — ASR (intelligibility)
+omnilingual-asr
+
+# Evaluation — naturalness
+# UTMOS is loaded via torch.hub (no pip install needed)
+
+# Evaluation — speaker similarity (voice-cloning models only)
+speechbrain>=1.0.0
+
+# Evaluation — FAD
+scipy>=1.10.0
+numpy>=1.24.0
+
+# Benchmark data
+# FLEURS Georgian is loaded via: datasets.load_dataset("google/fleurs", "ka_ge")

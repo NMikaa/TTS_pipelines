@@ -18,13 +18,10 @@ env/
 *.swo
 
 # Data (too large for git)
-cv-corpus-*/
+data/
 *.wav
 *.mp3
 *.flac
-latents_cache/
-alignment/outputs/
-alignments.json
 
 # Model weights & checkpoints
 checkpoints/
@@ -45,15 +42,14 @@ wandb/
 *.zip
 *.tar.gz
 *.parquet
-*.pdf
+
+# Evaluation outputs
+results/
+outputs/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# NeMo (large toolkit, cloned for alignment only)
-NeMo/
-
 # Misc
-tmp.py
 .env

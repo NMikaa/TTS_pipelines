@@ -1,0 +1,14 @@
+# OpenAudio S1-mini (Fish Speech) pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+# Fish Speech must be installed from source:
+#   git clone https://github.com/fishaudio/fish-speech.git
+#   cd fish-speech
+#   pip install -e .[cu129]   # CUDA 12.9
+#   pip install -e .[cu126]   # CUDA 12.6
+#
+# System deps (Linux):
+#   apt install portaudio19-dev libsox-dev ffmpeg
+#
+# Download model:
+#   huggingface-cli download fishaudio/openaudio-s1-mini --local-dir checkpoints/openaudio-s1-mini
