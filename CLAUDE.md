@@ -45,7 +45,7 @@ Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.p
 ### Data Quality Pipeline (TODO — implement in shared/data/)
 Common Voice data is noisy. Before training, apply 6-stage Emilia-inspired filtering:
 
-1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS
+1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — each pipeline resamples to its own rate (CosyVoice 3 needs 22,050 Hz, all others 24kHz)
 2. **DNSMOS filter** — Microsoft DNSMOS P.835 model, threshold >= 3.0 (drops noisy recordings)
    - Package: `pip install onnxruntime`, model from Microsoft DNS Challenge
 3. **VAD trim** — Silero VAD to trim leading/trailing silence, drop clips with >50% silence
