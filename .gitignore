@@ -18,7 +18,7 @@ env/
 *.swo
 
 # Data (too large for git)
-data/
+/data/
 *.wav
 *.mp3
 *.flac
