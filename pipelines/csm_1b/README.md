@@ -1,19 +1,26 @@
 # CSM-1B Pipeline
 
-Fine-tuning [CSM-1B](https://github.com/SesameAILabs/csm) (1B params) for Georgian TTS.
+Fine-tuning [CSM-1B](https://huggingface.co/sesame/csm-1b) (1B params) for Georgian TTS using Unsloth + HuggingFace Trainer.
 
 ## Architecture
 
 - **Type:** Llama backbone + Mimi audio codec decoder
-- **Parameters:** ~1B
-- **Key feature:** Conversational speech generation — designed for dialogue, not just read speech
-- **Fine-tuning:** LoRA via Unsloth + HuggingFace Trainer, or full fine-tune
-- **Pre-trained on:** Primarily English
+- **Parameters:** ~1B (58M trainable with LoRA)
+- **Fine-tuning:** LoRA (r=64, alpha=64) via Unsloth on all attention + MLP projections
+- **Sample rate:** 24 kHz
 - **License:** Apache 2.0
 
-## Why this model
+## Files
 
-CSM-1B is the only model in this benchmark designed specifically for conversational speech. It represents the Llama + neural codec approach. While English-centric, its Apache 2.0 license and HuggingFace Trainer compatibility make it practical for research.
+| File | Purpose |
+|------|---------|
+| `config.py` | All hyperparameters (batch size, LoRA, LR, etc.) |
+| `dataset.py` | Data loading and preprocessing — converts JSONL manifests to CSM training format |
+| `callbacks.py` | W&B callback — logs reference vs generated audio table on each eval |
+| `train.py` | Training script — model loading, LoRA, Trainer orchestration |
+| `infer.py` | Inference — single text or batch from manifest |
+| `evaluate.py` | Full evaluation pipeline (CER, UTMOS, FAD, speaker sim) |
+| `generate_report.py` | Markdown report from evaluation results |
 
 ## Setup
 
@@ -21,36 +28,67 @@ CSM-1B is the only model in this benchmark designed specifically for conversatio
 pip install -r requirements.txt
 ```
 
+## Data format
+
+JSONL manifest with one entry per line:
+```json
+{"id": "clip_001", "audio_path": "data/audio/clip_001.wav", "text": "გამარჯობა", "speaker_id": "spk_01", "duration_sec": 3.2}
+```
+
+To convert your own data, use `dataset.py` directly:
+```python
+from dataset import load_manifest, preprocess_example
+from transformers import AutoProcessor
+
+processor = AutoProcessor.from_pretrained("sesame/csm-1b")
+entries = load_manifest("my_manifest.json")
+result = preprocess_example(entries[0], processor)
+# result has: input_ids, attention_mask, labels, input_values, input_values_cutoffs, text, speaker_id
+```
+
 ## Training
 
 ```bash
-# LoRA fine-tuning (recommended, less VRAM)
-python train.py --data-dir ./data --run-name georgian_csm_v1
+# Default config (batch=64, lr=5e-5, 15 epochs)
+python train.py --data-dir ../../data/clean
 
-# Full fine-tuning (more VRAM)
-python train.py --data-dir ./data --full-finetune --run-name georgian_csm_full
+# Custom hyperparameters
+python train.py --data-dir ../../data/clean --lr 2e-4 --num-epochs 20 --batch-size 48
+
+# Quick test (5 steps)
+python train.py --data-dir ../../data/clean --max-steps 5
+
+# Resume from checkpoint
+python train.py --data-dir ../../data/clean --resume checkpoints/checkpoint-500
 ```
 
 ## Inference
 
 ```bash
-python infer.py --checkpoint checkpoints/best.pt --text "გამარჯობა მსოფლიო" --output output.wav
+# Single utterance
+python infer.py --checkpoint checkpoints/final --text "გამარჯობა მსოფლიო"
+
+# Batch from manifest
+python infer.py --checkpoint checkpoints/final --eval-manifest ../../data/clean/eval_manifest.json --output-dir outputs/
 ```
 
 ## Evaluation
 
 ```bash
-python evaluate.py --checkpoint checkpoints/best.pt --data-dir ./data --output-dir results/
+python evaluate.py --checkpoint checkpoints/final --data-dir ../../data/clean --output-dir results/
+python generate_report.py --results-dir results/
 ```
 
-## Generate report
+## Environment variables
 
 ```bash
-python generate_report.py --results-dir results/ --output report.md
+export HF_TOKEN=...           # HuggingFace token (csm-1b is gated)
+export WANDB_API_KEY=...      # Weights & Biases
+export WANDB_PROJECT=georgian-tts
 ```
 
 ## References
 
-- [CSM-1B GitHub](https://github.com/SesameAILabs/csm)
 - [CSM-1B HuggingFace](https://huggingface.co/sesame/csm-1b)
-- [Sesame Fine-tuning Guide](https://blog.speechmatics.com/sesame-finetune)
+- [Unsloth CSM Notebook](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Sesame_CSM_(1B)_TTS.ipynb)
+- [Speechmatics Fine-tuning Guide](https://blog.speechmatics.com/sesame-finetune)

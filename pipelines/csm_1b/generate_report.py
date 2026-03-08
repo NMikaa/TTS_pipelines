@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 
+from config import CSMConfig
+
 
 def generate_report(results_dir: str, output: str):
     results_path = Path(results_dir) / "evaluation.json"
@@ -18,6 +20,8 @@ def generate_report(results_dir: str, output: str):
 
     with open(results_path) as f:
         results = json.load(f)
+
+    config = CSMConfig()
 
     lines = [
         "# CSM-1B — Georgian TTS Evaluation Report",
@@ -30,8 +34,10 @@ def generate_report(results_dir: str, output: str):
         "|----------|-------|",
         "| Architecture | Llama backbone + Mimi audio codec |",
         "| Parameters | ~1B |",
-        "| Base model | sesame/csm-1b |",
-        "| Fine-tuning | LoRA (r=128, alpha=32) |",
+        f"| Base model | {config.model_name} |",
+        f"| Fine-tuning | LoRA (r={config.lora_r}, alpha={config.lora_alpha}) |",
+        f"| Batch size | {config.batch_size} x {config.gradient_accumulation_steps} |",
+        f"| Learning rate | {config.lr} |",
         "",
         "## Results",
         "",
@@ -40,8 +46,10 @@ def generate_report(results_dir: str, output: str):
     ]
 
     for key, label, val_key in [
-        ("intelligibility", "CER", "mean_cer"), ("naturalness", "UTMOS", "mean_score"),
-        ("speaker_similarity", "Speaker sim", "mean_similarity"), ("fad", "FAD", "fad_score"),
+        ("intelligibility", "CER", "mean_cer"),
+        ("naturalness", "UTMOS", "mean_score"),
+        ("speaker_similarity", "Speaker sim", "mean_similarity"),
+        ("fad", "FAD", "fad_score"),
     ]:
         if key in results and val_key in results.get(key, {}):
             lines.append(f"| {label} | {results[key][val_key]:.4f} |")
