@@ -30,7 +30,7 @@ All models are evaluated with the same metrics on FLEURS Georgian (~400 test sam
 
 ## Data
 
-- **Training:** ~71k WAV files at 24kHz from Mozilla Common Voice Georgian, stored on S3 (`s3://ttsopensource/`)
+- **Training:** ~42k WAV files at 24kHz from Mozilla Common Voice Georgian, stored on S3 (`s3://ttsopensource/`)
 - **Evaluation:** FLEURS Georgian via `datasets.load_dataset("google/fleurs", "ka_ge", split="test")`
 
 A fixed train/val/test split is shared across all pipelines. See [shared/data/](shared/data/).
@@ -103,14 +103,10 @@ TTS_pipelines/
 └── report/                             # Comparative report/paper
 ```
 
-## License
-
-The framework code (shared/, pipeline scaffolds) is MIT licensed. Individual models have their own licenses — see each pipeline's README.
 
 ## References
 
 - Mozilla Common Voice: https://commonvoice.mozilla.org/
 - Meta Omnilingual ASR: https://huggingface.co/facebook/omniASR_LLM_7B_v2
-- UTMOS: https://github.com/sarulab-speech/UTMOS
 - SpeechBrain ECAPA-TDNN: https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb
 - FLEURS: https://huggingface.co/datasets/google/fleurs
