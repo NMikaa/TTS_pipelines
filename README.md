@@ -103,7 +103,6 @@ TTS_pipelines/
 └── report/                             # Comparative report/paper
 ```
 
-
 ## References
 
 - Mozilla Common Voice: https://commonvoice.mozilla.org/
