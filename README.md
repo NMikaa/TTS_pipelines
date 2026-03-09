@@ -30,7 +30,7 @@ All models are evaluated with the same metrics on FLEURS Georgian (~400 test sam
 
 ## Data
 
-- **Training:** ~42k WAV files at 24kHz from Mozilla Common Voice Georgian, stored on S3 (`s3://ttsopensource/`)
+- **Training:** ~21k WAV files at 24kHz from Mozilla Common Voice Georgian, stored on S3 (`s3://ttsopensource/`)
 - **Evaluation:** FLEURS Georgian via `datasets.load_dataset("google/fleurs", "ka_ge", split="test")`
 
 A fixed train/val/test split is shared across all pipelines. See [shared/data/](shared/data/).
