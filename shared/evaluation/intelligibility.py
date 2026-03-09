@@ -69,7 +69,7 @@ def transcribe_omnilingual(audio_paths: list[str]) -> dict[str, str]:
     """
     from omnilingual_asr.models.inference.pipeline import ASRInferencePipeline
 
-    pipeline = ASRInferencePipeline(model_card="omniASR_LLM_7B_v2")
+    pipeline = ASRInferencePipeline(model_card="omniASR_LLM_7B")
     languages = ["kat_Geor"] * len(audio_paths)
     results = pipeline.transcribe(audio_paths, lang=languages, batch_size=4)
 

@@ -58,7 +58,7 @@ Common Voice data is noisy. Before training, apply 6-stage Emilia-inspired filte
 Expected: ~71k -> ~50-55k samples after filtering (keep ~75%)
 
 ### Evaluation Benchmark
-- **Source**: FLEURS Georgian (~400 test samples, different speakers AND different text from training data)
+- **Source**: FLEURS Georgian (979 test samples, different speakers AND different text from training data)
 - **Load via**: `datasets.load_dataset("google/fleurs", "ka_ge", split="test")`
 - **Why FLEURS**: Only standardized Georgian speech dataset with professional recordings. Different speakers/text from Common Voice ensures no data leakage. ~400 samples is enough for statistical significance.
 - **No existing Georgian TTS benchmark exists** — this project creates the first one.
@@ -79,7 +79,7 @@ All metrics are **round-trip or reference-free** — no matched same-speaker ref
 
 #### 1. CER (Primary metric — Intelligibility)
 - **Method**: Round-trip — TTS generates audio -> Meta Omnilingual ASR 7B transcribes it -> compare transcription to original text via Character Error Rate
-- **ASR model**: `omnilingual-asr` package, model `omniASR_LLM_7B_v2`, language code `kat_Geor`
+- **ASR model**: `omnilingual-asr` package, model `omniASR_LLM_7B`, language code `kat_Geor`
 - **ASR quality**: 1.9% CER on Georgian (SOTA)
 - **Install**: `pip install omnilingual-asr`
 

@@ -15,18 +15,21 @@ Train 6 different TTS models on the **same dataset** (Common Voice Georgian), ev
 | [Orpheus](pipelines/orpheus/) | Pure LLM (Llama backbone) | 150M-3B | LoRA (Unsloth) | Apache 2.0 |
 | [Fish Speech](pipelines/fish_speech/) | Dual AR (semantic + acoustic) | ~500M | LoRA | Apache 2.0 |
 | [Qwen3-TTS](pipelines/qwen3_tts/) | LLM (Qwen3) + DiT | ~500M | Full/LoRA | Apache 2.0 |
-| [CSM-1B](pipelines/csm_1b/) | Llama + Mimi codec | 1B | Full fine-tune | Apache 2.0 |
+| [CSM-1B](pipelines/csm_1b/) | Llama + Mimi codec | 1B | LoRA (Unsloth) | Apache 2.0 |
 
 ## Evaluation Metrics
 
-All models are evaluated with the same metrics on FLEURS Georgian (~400 test samples):
+All models are evaluated with the same metrics on FLEURS Georgian (979 test samples):
 
 | Metric | What it measures | Tool |
 |--------|-----------------|------|
 | **CER** | Intelligibility (round-trip TTS -> ASR -> text) | Meta Omnilingual ASR 7B |
-| **UTMOS** | Naturalness (automatic MOS prediction) | UTMOS v2 (English-biased, relative only) |
-| **FAD** | Distribution quality | Frechet Audio Distance (VGGish) |
-| **Speaker similarity** | Voice identity preservation (voice-cloning models only) | ECAPA-TDNN cosine similarity |
+| **MCD** | Spectral closeness to reference audio | pymcd (DTW alignment) |
+| **Speaker similarity** | Voice identity preservation | ECAPA-TDNN cosine similarity (language-agnostic) |
+
+**Excluded metrics:**
+- **UTMOS** — Trained on English only, not calibrated for Georgian. Would produce misleading absolute scores.
+- **FAD** — Requires large sample sets from matched distributions; not meaningful for cross-speaker evaluation.
 
 ## Data
 
@@ -106,6 +109,6 @@ TTS_pipelines/
 ## References
 
 - Mozilla Common Voice: https://commonvoice.mozilla.org/
-- Meta Omnilingual ASR: https://huggingface.co/facebook/omniASR_LLM_7B_v2
+- Meta Omnilingual ASR: https://huggingface.co/facebook/omniASR_LLM_7B
 - SpeechBrain ECAPA-TDNN: https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb
 - FLEURS: https://huggingface.co/datasets/google/fleurs

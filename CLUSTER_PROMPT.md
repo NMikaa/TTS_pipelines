@@ -28,7 +28,7 @@ Create the 6-stage data quality filtering pipeline. Each stage takes a list of e
 
 4. **SNR filter** — Estimate signal-to-noise ratio from the waveform. Drop clips with SNR < 15 dB. Simple approach: segment into voiced (signal) and unvoiced (noise) frames using energy thresholding.
 
-5. **Transcript verification** — Use Meta Omnilingual ASR 7B (`pip install omnilingual-asr`, model `omniASR_LLM_7B_v2`, language `kat_Geor`) to transcribe each clip. Compare to original text via CER (character error rate). Drop clips with CER > 0.20. This catches wrong transcripts, code-switching, and garbage audio. WARNING: Do NOT use Whisper — it's catastrophically bad for Georgian (78-88% WER).
+5. **Transcript verification** — Use Meta Omnilingual ASR 7B (`pip install omnilingual-asr`, model `omniASR_LLM_7B`, language `kat_Geor`) to transcribe each clip. Compare to original text via CER (character error rate). Drop clips with CER > 0.20. This catches wrong transcripts, code-switching, and garbage audio. WARNING: Do NOT use Whisper — it's catastrophically bad for Georgian (78-88% WER).
 
 6. **Speaker selection** — Use ECAPA-TDNN (`speechbrain/spkrec-ecapa-voxceleb`) to extract speaker embeddings. Cluster speakers. Keep top speakers by amount of data. This ensures speaker consistency in training data.
 

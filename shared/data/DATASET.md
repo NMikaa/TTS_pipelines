@@ -10,7 +10,7 @@ Cleaned and filtered subset of Mozilla Common Voice Georgian (~71k raw clips) fo
 2. **Enhance** — VoiceFixer restoration + sox spectral noise subtraction
 3. **NISQA filter** — NISQA MOS scoring (threshold=0.0, scored only, no filtering at this stage)
 4. **Duration outlier** — Emilia-style IQR filter on per-character duration (catches bad transcripts, tempo anomalies)
-5. **Transcript verify** — Round-trip CER via Meta Omnilingual ASR 7B (`omniASR_LLM_7B_v2`), drop if CER > 0.20
+5. **Transcript verify** — Round-trip CER via Meta Omnilingual ASR 7B (`omniASR_LLM_7B`), drop if CER > 0.20
 6. **Speaker select** — Keep speakers with >= 1400s total audio
 
 ### Pipeline Results

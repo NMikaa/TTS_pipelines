@@ -19,7 +19,11 @@ Fine-tuning [CSM-1B](https://huggingface.co/sesame/csm-1b) (1B params) for Georg
 | `callbacks.py` | W&B callback — logs reference vs generated audio table on each eval |
 | `train.py` | Training script — model loading, LoRA, Trainer orchestration |
 | `infer.py` | Inference — single text or batch from manifest |
-| `evaluate.py` | Full evaluation pipeline (CER, UTMOS, FAD, speaker sim) |
+| `evaluate.py` | Full evaluation pipeline (CER, MCD, ECAPA-TDNN speaker sim) |
+| `eval_checkpoints.py` | Checkpoint comparison across all metrics |
+| `eval_fleurs.py` | FLEURS Georgian benchmark evaluation (CER/WER) |
+| `eval_speaker_sim.py` | Speaker similarity evaluation |
+| `REPORT.md` | Evaluation results and methodology |
 | `generate_report.py` | Markdown report from evaluation results |
 
 ## Setup
