@@ -4,7 +4,7 @@ The first Georgian TTS benchmark — a comparative study of open-source TTS arch
 
 ## Goal
 
-Train 6 different TTS models on the **same dataset** (Common Voice Georgian), evaluate them on the **same benchmark** (FLEURS Georgian) with the **same metrics**, and determine which architecture works best for Georgian. The result is an open-source framework that anyone can use to benchmark TTS models on their own language.
+Train 5 different TTS models on the **same dataset** (Common Voice Georgian), evaluate them on the **same benchmark** (FLEURS Georgian) with the **same metrics**, and determine which architecture works best for Georgian. The result is an open-source framework that anyone can use to benchmark TTS models on their own language.
 
 ## Models
 
@@ -13,8 +13,7 @@ Train 6 different TTS models on the **same dataset** (Common Voice Georgian), ev
 | [F5-TTS](pipelines/f5_tts/) | Non-AR flow matching (DiT) | 335M | Full fine-tune | CC-BY-NC-4.0 |
 | [CosyVoice 3](pipelines/cosyvoice/) | LLM + conditional flow matching | 0.5B | SFT | Apache 2.0 |
 | [Orpheus](pipelines/orpheus/) | Pure LLM (Llama backbone) | 150M-3B | LoRA (Unsloth) | Apache 2.0 |
-| [Fish Speech](pipelines/fish_speech/) | Dual AR (semantic + acoustic) | ~500M | LoRA | Apache 2.0 |
-| [Qwen3-TTS](pipelines/qwen3_tts/) | LLM (Qwen3) + DiT | ~500M | Full/LoRA | Apache 2.0 |
+| [Qwen3-TTS](pipelines/qwen3_tts/) | Multi-codebook LM | 0.6B | Full SFT | Apache 2.0 |
 | [CSM-1B](pipelines/csm_1b/) | Llama + Mimi codec | 1B | LoRA (Unsloth) | Apache 2.0 |
 
 ## Evaluation Metrics
@@ -100,7 +99,6 @@ TTS_pipelines/
 │   ├── f5_tts/
 │   ├── cosyvoice/
 │   ├── orpheus/
-│   ├── fish_speech/
 │   ├── qwen3_tts/
 │   └── csm_1b/
 └── report/                             # Comparative report/paper

@@ -1,7 +1,7 @@
 # TTS Pipelines — Complete Project Context
 
 ## What This Is
-The **first Georgian TTS benchmark** — a comparative study of 6 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
+The **first Georgian TTS benchmark** — a comparative study of 5 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
 
 ## Final Model Lineup (pipelines/)
 
@@ -10,17 +10,16 @@ The **first Georgian TTS benchmark** — a comparative study of 6 open-source TT
 | 1 | **F5-TTS** | Non-AR flow matching (DiT) | 335M | Yes (reference audio) | Full fine-tune via repo CLI | CC-BY-NC-4.0 |
 | 2 | **CosyVoice 3** | LLM + conditional flow matching | 0.5B | Yes (3s prompt) | Full SFT (llm + flow + hifigan) | Apache 2.0 |
 | 3 | **Orpheus** | Pure LLM (Llama 3.2 + SNAC) | 3B | Yes (prompt) | LoRA via Unsloth | Apache 2.0 |
-| 4 | **OpenAudio S1-mini** | Dual AR (LLAMA + DAC codec) | 0.5B | Yes (reference audio) | LoRA on LLAMA component | CC-BY-NC-SA-4.0 |
-| 5 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
-| 6 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
+| 4 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
+| 5 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
 
 ### Models DROPPED and why
 - **XTTS v2** — Coqui shut down December 2025. Dead project, no maintenance, restrictive license.
 - **VITS/MMS** — Legacy quality (~30M params). Far below 2025-2026 SOTA.
+- **OpenAudio S1-mini** (Fish Speech) — LoRA fine-tuning confirmed broken by maintainers after GRPO training. Active code bugs silently corrupt weights during LoRA setup (GitHub #1163). Multiple users report gibberish output with issues closed as "not planned." Non-Latin script tokenization also broken (#852).
 
 ### Models ADDED and why
 - **Qwen3-TTS** (January 2026) — Alibaba/Qwen. Discrete multi-codebook LM, trained on 5M+ hours, 10 languages. Apache 2.0.
-- **OpenAudio S1-mini** (Fish Speech) — Highest open-source TTS Arena ELO as of early 2026.
 
 ### Model UPGRADED
 - **CosyVoice 2 -> CosyVoice 3** — `FunAudioLLM/Fun-CosyVoice3-0.5B-2512`, released December 2025, trained on 1M+ hours.
@@ -100,7 +99,7 @@ All metrics are **round-trip or reference-free** — no matched same-speaker ref
 #### 4. Speaker Similarity (Voice-cloning models ONLY)
 - **Method**: ECAPA-TDNN cosine similarity via SpeechBrain (`speechbrain/spkrec-ecapa-voxceleb`)
 - **What it measures**: Whether the generated voice matches the voice prompt that was provided
-- **ONLY valid for**: F5-TTS, CosyVoice 3, Orpheus, OpenAudio S1-mini, Qwen3-TTS
+- **ONLY valid for**: F5-TTS, CosyVoice 3, Orpheus, Qwen3-TTS
 - **NOT valid for**: CSM-1B (multi-speaker, no voice cloning condition)
 - **NOT valid for**: Cross-speaker comparison (comparing generated vs unrelated reference)
 
@@ -297,63 +296,7 @@ model.save_pretrained("lora_model")
 
 ---
 
-### 4. OpenAudio S1-mini (fishaudio/openaudio-s1-mini) — formerly Fish Speech
-
-- **GitHub**: https://github.com/fishaudio/fish-speech (rebranded to OpenAudio)
-- **HuggingFace**: `fishaudio/openaudio-s1-mini` (0.5B, gated model)
-- **Fine-tuning docs**: https://speech.fish.audio/finetune/
-- **Install**: Clone repo + `pip install -e .[cu129]` (NOT `pip install fish-speech`)
-- **System deps**: `apt install portaudio19-dev libsox-dev ffmpeg`
-- **License**: Code: Apache 2.0, **Weights: CC-BY-NC-SA-4.0** (non-commercial)
-
-#### Fine-tuning method
-**LoRA on LLAMA component only** (default: rank=8, alpha=16). Codec stays frozen.
-
-#### Data format
-Speaker subdirectories with `.wav` + `.lab` (plain text transcription) files:
-```
-data/SPK1/audio1.wav
-data/SPK1/audio1.lab
-```
-
-#### Pipeline (3-step + merge)
-```bash
-# Download model
-huggingface-cli download fishaudio/openaudio-s1-mini --local-dir checkpoints/openaudio-s1-mini
-
-# Step 1: Extract VQ tokens
-python tools/vqgan/extract_vq.py data \
-    --num-workers 1 --batch-size 16 \
-    --config-name "modded_dac_vq" \
-    --checkpoint-path "checkpoints/openaudio-s1-mini/codec.pth"
-
-# Step 2: Build protobuf dataset
-python tools/llama/build_dataset.py \
-    --input "data" --output "data/protos" --text-extension .lab --num-workers 16
-
-# Step 3: LoRA fine-tune
-python fish_speech/train.py --config-name text2semantic_finetune \
-    project=georgian_fish_v1 \
-    +lora@model.model.lora_config=r_8_alpha_16
-
-# Step 4: Merge LoRA weights
-python tools/llama/merge_lora.py \
-    --lora-config r_8_alpha_16 \
-    --base-weight checkpoints/openaudio-s1-mini \
-    --lora-weight results/georgian_fish_v1/checkpoints/<best_step>.ckpt \
-    --output checkpoints/openaudio-s1-mini-georgian/
-```
-
-#### Key details
-- **Config**: `fish_speech/configs/text2semantic_finetune.yaml` (Hydra + PyTorch Lightning)
-- **Defaults**: batch_size=4, max_steps=10000, save/val every 100 steps
-- **Min GPU**: 12GB VRAM for inference, more for training
-- **Known issue**: Some users report gibberish output (GitHub #1136). Earlier checkpoints often work better.
-- **Windows**: Add `trainer.strategy.process_group_backend=gloo`
-
----
-
-### 5. Qwen3-TTS (Qwen/Qwen3-TTS-12Hz-0.6B-Base or 1.7B-Base)
+### 4. Qwen3-TTS (Qwen/Qwen3-TTS-12Hz-0.6B-Base or 1.7B-Base)
 
 - **GitHub**: https://github.com/QwenLM/Qwen3-TTS
 - **HuggingFace models**:
@@ -406,7 +349,7 @@ python finetuning/sft_12hz.py \
 
 ---
 
-### 6. CSM-1B (sesame/csm-1b) — LoRA via Unsloth
+### 5. CSM-1B (sesame/csm-1b) — LoRA via Unsloth
 
 - **GitHub**: https://github.com/SesameAILabs/csm
 - **HuggingFace**: `sesame/csm-1b` (gated) or `unsloth/csm-1b` (Unsloth copy)
