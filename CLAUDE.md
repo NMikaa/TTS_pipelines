@@ -1,28 +1,25 @@
 # TTS Pipelines — Complete Project Context
 
 ## What This Is
-The **first Georgian TTS benchmark** — a comparative study of 5 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
+The **first Georgian TTS benchmark** — a comparative study of 4 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
 
 ## Final Model Lineup (pipelines/)
 
 | # | Pipeline | Architecture | Params | Voice Cloning | Fine-tuning Method | License (Weights) |
 |---|----------|-------------|--------|---------------|-------------------|-------------------|
 | 1 | **F5-TTS** | Non-AR flow matching (DiT) | 335M | Yes (reference audio) | Full fine-tune via repo CLI | CC-BY-NC-4.0 |
-| 2 | **CosyVoice 3** | LLM + conditional flow matching | 0.5B | Yes (3s prompt) | Full SFT (llm + flow + hifigan) | Apache 2.0 |
-| 3 | **Orpheus** | Pure LLM (Llama 3.2 + SNAC) | 3B | Yes (prompt) | LoRA via Unsloth | Apache 2.0 |
-| 4 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
-| 5 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
+| 2 | **Orpheus** | Pure LLM (Llama 3.2 + SNAC) | 3B | Yes (prompt) | LoRA via Unsloth | Apache 2.0 |
+| 3 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
+| 4 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
 
 ### Models DROPPED and why
 - **XTTS v2** — Coqui shut down December 2025. Dead project, no maintenance, restrictive license.
 - **VITS/MMS** — Legacy quality (~30M params). Far below 2025-2026 SOTA.
 - **OpenAudio S1-mini** (Fish Speech) — LoRA fine-tuning confirmed broken by maintainers after GRPO training. Active code bugs silently corrupt weights during LoRA setup (GitHub #1163). Multiple users report gibberish output with issues closed as "not planned." Non-Latin script tokenization also broken (#852).
+- **CosyVoice 3** — Full SFT on 0.5B params with 20K samples overfits after 5 epochs. No LoRA support. 3-stage pipeline (LLM→Flow→HiFiGAN) compounds errors. Generated audio is clean but has severe pronunciation issues for Georgian — the model cannot learn a new language's phonology with so few effective training steps on full SFT.
 
 ### Models ADDED and why
 - **Qwen3-TTS** (January 2026) — Alibaba/Qwen. Discrete multi-codebook LM, trained on 5M+ hours, 10 languages. Apache 2.0.
-
-### Model UPGRADED
-- **CosyVoice 2 -> CosyVoice 3** — `FunAudioLLM/Fun-CosyVoice3-0.5B-2512`, released December 2025, trained on 1M+ hours.
 
 ## File Structure Per Pipeline
 Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.py`, `generate_report.py`, `requirements.txt`
@@ -44,7 +41,7 @@ Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.p
 ### Data Quality Pipeline (TODO — implement in shared/data/)
 Common Voice data is noisy. Before training, apply 6-stage Emilia-inspired filtering:
 
-1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — each pipeline resamples to its own rate (CosyVoice 3 needs 22,050 Hz, all others 24kHz)
+1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — all current pipelines use 24kHz
 2. **DNSMOS filter** — Microsoft DNSMOS P.835 model, threshold >= 3.0 (drops noisy recordings)
    - Package: `pip install onnxruntime`, model from Microsoft DNS Challenge
 3. **VAD trim** — Silero VAD to trim leading/trailing silence, drop clips with >50% silence
@@ -99,7 +96,7 @@ All metrics are **round-trip or reference-free** — no matched same-speaker ref
 #### 4. Speaker Similarity (Voice-cloning models ONLY)
 - **Method**: ECAPA-TDNN cosine similarity via SpeechBrain (`speechbrain/spkrec-ecapa-voxceleb`)
 - **What it measures**: Whether the generated voice matches the voice prompt that was provided
-- **ONLY valid for**: F5-TTS, CosyVoice 3, Orpheus, Qwen3-TTS
+- **ONLY valid for**: F5-TTS, Orpheus, Qwen3-TTS
 - **NOT valid for**: CSM-1B (multi-speaker, no voice cloning condition)
 - **NOT valid for**: Cross-speaker comparison (comparing generated vs unrelated reference)
 
@@ -168,73 +165,7 @@ f5-tts_finetune-gradio
 
 ---
 
-### 2. CosyVoice 3 (FunAudioLLM/Fun-CosyVoice3-0.5B-2512)
-
-- **GitHub**: https://github.com/FunAudioLLM/CosyVoice
-- **HuggingFace**: `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` (also RL variant: `Fun-CosyVoice3-0.5B-2512_RL`)
-- **Install**: Clone repo + `pip install -r requirements.txt` (NO pip package)
-- **System deps**: `sudo apt-get install sox libsox-dev`
-- **License**: Apache 2.0 (both code and weights)
-
-#### Fine-tuning method
-**Full SFT — trains 3 sub-models sequentially: llm, flow, hifigan.** No LoRA.
-
-#### Data format
-Kaldi-style files per split:
-- `wav.scp` — `<utt_id> <path_to_wav>`
-- `text` — `<utt_id> <transcript>`
-- `utt2spk` — `<utt_id> <speaker_id>`
-- `spk2utt` — `<speaker_id> <utt_id1> <utt_id2> ...`
-
-#### Pipeline (6 stages)
-```bash
-# Download model
-from huggingface_hub import snapshot_download
-snapshot_download('FunAudioLLM/Fun-CosyVoice3-0.5B-2512', local_dir='pretrained_models/Fun-CosyVoice3-0.5B')
-
-# Stage 0: Prepare Kaldi-style data files
-python local/prepare_data.py --src_dir $data_dir --des_dir data/train
-
-# Stage 1: Extract speaker embeddings (CampPlus ONNX)
-python tools/extract_embedding.py --dir data/train --onnx_path $model_dir/campplus.onnx
-
-# Stage 2: Extract discrete speech tokens
-python tools/extract_speech_token.py --dir data/train --onnx_path $model_dir/speech_tokenizer_v3.onnx
-
-# Stage 3: Convert to Parquet
-python tools/make_parquet_list.py --num_utts_per_parquet 1000 --num_processes 10 \
-    --src_dir data/train --des_dir data/train/parquet
-
-# Stage 5: Train all 3 sub-models
-for model in llm flow hifigan; do
-    torchrun --nnodes=1 --nproc_per_node=$num_gpus \
-        --rdzv_id=1986 --rdzv_backend="c10d" --rdzv_endpoint="localhost:1234" \
-        cosyvoice/bin/train.py \
-        --train_engine torch_ddp \
-        --config conf/cosyvoice2.yaml \
-        --train_data data/train.data.list \
-        --cv_data data/dev.data.list \
-        --model $model \
-        --checkpoint $model_dir/$model.pt \
-        --model_dir $(pwd)/exp/cosyvoice3/$model \
-        --use_amp
-done
-
-# Stage 6: Average best 5 checkpoints
-python cosyvoice/bin/average_model.py --dst_model $decode_ckpt \
-    --src_path $(pwd)/exp/cosyvoice3/$model --num 5 --val_best
-```
-
-#### Key details
-- **Sample rate**: CosyVoice 3 uses **22,050 Hz** (v2 was 24kHz)
-- **Config**: `conf/cosyvoice2.yaml` — LR 1e-5, warmup 2500 steps, max 200 epochs, grad clip 5
-- **GPU**: 4x GPUs recommended. DeepSpeed ZeRO Stage 2 supported. ~24GB VRAM per GPU.
-- **Stages 1-2 can be skipped** — online feature extraction is supported but slower
-- **Also supports**: DPO training (`--dpo` flag) and GRPO (reinforcement learning)
-
----
-
-### 3. Orpheus (unsloth/orpheus-3b-0.1-ft) — LoRA via Unsloth
+### 2. Orpheus (unsloth/orpheus-3b-0.1-ft) — LoRA via Unsloth
 
 - **GitHub**: https://github.com/canopyai/Orpheus-TTS
 - **HuggingFace**: `unsloth/orpheus-3b-0.1-ft` (Unsloth copy) or `canopylabs/orpheus-3b-0.1-ft` (official)
@@ -296,7 +227,7 @@ model.save_pretrained("lora_model")
 
 ---
 
-### 4. Qwen3-TTS (Qwen/Qwen3-TTS-12Hz-0.6B-Base or 1.7B-Base)
+### 3. Qwen3-TTS (Qwen/Qwen3-TTS-12Hz-0.6B-Base or 1.7B-Base)
 
 - **GitHub**: https://github.com/QwenLM/Qwen3-TTS
 - **HuggingFace models**:
@@ -349,7 +280,7 @@ python finetuning/sft_12hz.py \
 
 ---
 
-### 5. CSM-1B (sesame/csm-1b) — LoRA via Unsloth
+### 4. CSM-1B (sesame/csm-1b) — LoRA via Unsloth
 
 - **GitHub**: https://github.com/SesameAILabs/csm
 - **HuggingFace**: `sesame/csm-1b` (gated) or `unsloth/csm-1b` (Unsloth copy)
@@ -429,17 +360,16 @@ Managed by separate repo: **Training_Agent** (chat-powered Vast.ai GPU orchestra
 ## What's Implemented vs TODO
 
 ### Done
-- Repository structure with all 6 pipeline directories (f5_tts, cosyvoice, orpheus, fish_speech, qwen3_tts, csm_1b)
+- Repository structure with 4 pipeline directories (f5_tts, orpheus, qwen3_tts, csm_1b)
 - Shared data download/prepare/splits code
 - Shared evaluation code (CER, UTMOS, FAD, speaker similarity)
 - Pipeline scaffolds (config, train, infer, evaluate, generate_report) with correct imports and CLI args
-- Fish Speech train.py has working data format converter (prepare_lab_files)
 - Top-level README, CLAUDE.md, requirements.txt, .gitignore
+- CosyVoice 3 evaluated and dropped (full SFT overfits, poor Georgian pronunciation)
 
 ### TODO
 - **Implement data quality pipeline**: `shared/data/quality.py` with the 6-stage filtering
 - **Implement train.py for each pipeline**: Wire up actual model loading and training calls
 - **Implement infer.py for each pipeline**: Wire up actual inference
-- **Update CosyVoice sample rate**: v3 uses 22,050 Hz (not 24kHz)
 - **Update Qwen3-TTS pipeline files**: Correct architecture description (multi-codebook LM, not DiT)
 - **Write comparative report template**: `report/` directory with cross-model comparison

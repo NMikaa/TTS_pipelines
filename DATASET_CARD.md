@@ -100,4 +100,4 @@ If you use this dataset, please cite Mozilla Common Voice:
 
 ## Part of the Georgian TTS Benchmark
 
-This dataset was created as part of the first Georgian TTS benchmark — a comparative study of 6 open-source TTS architectures (F5-TTS, CosyVoice 3, Orpheus, OpenAudio S1-mini, Qwen3-TTS, CSM-1B) fine-tuned on the same data and evaluated with the same metrics.
+This dataset was created as part of the first Georgian TTS benchmark — a comparative study of 4 open-source TTS architectures (F5-TTS, Orpheus, Qwen3-TTS, CSM-1B) fine-tuned on the same data and evaluated with the same metrics.

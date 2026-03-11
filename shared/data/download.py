@@ -20,9 +20,10 @@ S3_BUCKET = "ttsopensource"
 S3_REGION = "eu-central-1"
 S3_PREFIX = "tts-georgian/"
 S3_FILES = {
-    "tts-georgian/audio.rar": "audio.rar",
-    "tts-georgian/alignment/voice_actor_manifest.json": "voice_actor_manifest.json",
-    "tts-georgian/alignments.json": "alignments.json",
+    "tts-georgian/manifests/train_manifest.json": "train_manifest.json",
+    "tts-georgian/audio_clean.tar.gz": "audio_clean.tar.gz",
+    "tts-georgian/manifests/eval_manifest.json": "eval_manifest.json",
+    "tts-georgian/manifests/speaker_refs_manifest.json": "speaker_refs_manifest.json",
 }
 
 

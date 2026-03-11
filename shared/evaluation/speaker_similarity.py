@@ -9,8 +9,8 @@ NOT meaningful when comparing across different speakers (e.g. TTS output
 in one voice vs FLEURS recording in another voice). In that case, you're
 measuring speaker difference, not synthesis quality.
 
-Models that support voice cloning: F5-TTS, XTTS v2, CosyVoice, Orpheus
-Models that don't: VITS/MMS (single-speaker)
+Models that support voice cloning: F5-TTS, Orpheus, Qwen3-TTS
+Models that don't: CSM-1B (multi-speaker, no voice cloning condition)
 
 Usage:
     from shared.evaluation.speaker_similarity import compute_speaker_similarity

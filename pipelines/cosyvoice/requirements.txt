@@ -1,6 +1,0 @@
-# CosyVoice 3 pipeline dependencies
-# Install shared deps first: pip install -r ../../requirements.txt
-
-# CosyVoice (install from source)
-# git clone https://github.com/FunAudioLLM/CosyVoice.git
-# cd CosyVoice && pip install -e .

@@ -20,7 +20,7 @@ You need `aws` CLI configured and `unrar` installed.
 
 Create the 6-stage data quality filtering pipeline. Each stage takes a list of entries (from `prepare_dataset()`) and returns a filtered list. The pipeline should:
 
-1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS (use `torchaudio` for resampling, `pyloudnorm` for LUFS normalization). Write cleaned audio to `data/audio_clean/`. Store at 24kHz — CosyVoice 3 will resample to 22,050 Hz in its own pipeline.
+1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS (use `torchaudio` for resampling, `pyloudnorm` for LUFS normalization). Write cleaned audio to `data/audio_clean/`. Store at 24kHz — all current pipelines use 24kHz.
 
 2. **DNSMOS filter** — Score each clip with Microsoft DNSMOS P.835 (ONNX model). Drop clips scoring < 3.0. The DNSMOS model can be downloaded from the Microsoft DNS Challenge repo. Use `onnxruntime` for inference. Process in batches.
 
@@ -47,12 +47,12 @@ python -m shared.data.quality --data-dir ./data --output-dir ./data/clean
 ```
 
 ### After data cleaning is done
-Once we have clean data, the next steps are implementing train.py and infer.py for each of the 6 models, starting with CSM-1B (confirmed working with Unsloth LoRA). But data first.
+Once we have clean data, the next steps are implementing train.py and infer.py for each of the 4 models, starting with CSM-1B (confirmed working with Unsloth LoRA). But data first.
 
 ### Important notes
 - Read CLAUDE.md for ALL project context including model details, evaluation metrics, and design decisions
 - The shared data code already exists: `shared/data/download.py`, `shared/data/prepare.py`, `shared/data/splits.py`
 - The evaluation code already exists in `shared/evaluation/`
-- All 6 pipeline directories exist with scaffolds but train.py/infer.py raise NotImplementedError
+- All 4 pipeline directories exist with scaffolds but train.py/infer.py raise NotImplementedError
 - GPU: You need at least one GPU for DNSMOS (ONNX), ASR (7B model), and speaker embeddings
 - GPU: 48GB VRAM available — plenty for all stages including the ASR 7B model

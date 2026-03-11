@@ -4,9 +4,9 @@ Fine-tuning [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) (~500M params) fo
 
 ## Architecture
 
-- **Type:** LLM (Qwen3 backbone) + DiT vocoder
-- **Parameters:** ~500M
-- **Key feature:** Strong multilingual capabilities from Qwen3 foundation, reference-audio voice cloning
+- **Type:** Discrete multi-codebook language model (2048 codebook, 16 quantizers, 12Hz frame rate)
+- **Parameters:** 0.6B / 1.7B
+- **Key feature:** Trained on 5M+ hours across 10 languages, reference-audio voice cloning
 - **Released:** January 2026
 - **License:** Apache 2.0
 
