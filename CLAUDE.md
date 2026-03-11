@@ -1,16 +1,18 @@
 # TTS Pipelines — Complete Project Context
 
 ## What This Is
-The **first Georgian TTS benchmark** — a comparative study of 4 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
+The **first Georgian TTS benchmark** — a comparative study of 6 open-source TTS architectures for Georgian (low-resource language). Each pipeline fine-tunes a different model on the same Common Voice Georgian dataset and evaluates on the same FLEURS Georgian benchmark with the same metrics. The result is an open-source framework + paper/report.
 
 ## Final Model Lineup (pipelines/)
 
 | # | Pipeline | Architecture | Params | Voice Cloning | Fine-tuning Method | License (Weights) |
 |---|----------|-------------|--------|---------------|-------------------|-------------------|
 | 1 | **F5-TTS** | Non-AR flow matching (DiT) | 335M | Yes (reference audio) | Full fine-tune via repo CLI | CC-BY-NC-4.0 |
-| 2 | **Orpheus** | Pure LLM (Llama 3.2 + SNAC) | 3B | Yes (prompt) | LoRA via Unsloth | Apache 2.0 |
-| 3 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
-| 4 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
+| 2 | **CosyVoice 3** | LLM + conditional flow matching | 0.5B | Yes (3s prompt) | Full SFT (llm + flow + hifigan) | Apache 2.0 |
+| 3 | **Orpheus** | Pure LLM (Llama 3.2 + SNAC) | 3B | Yes (prompt) | LoRA via Unsloth | Apache 2.0 |
+| 4 | **Qwen3-TTS** | Multi-codebook LM | 0.6B / 1.7B | Yes (reference audio) | Full SFT via official scripts | Apache 2.0 |
+| 5 | **CSM-1B** | Llama + Mimi codec | 1B | No (multi-speaker) | LoRA via Unsloth | Apache 2.0 |
+| 6 | **MagPIE TTS** | Encoder-decoder transformer + CTC alignment | 357M | Yes (reference audio) | Full SFT via NeMo | NVIDIA Open Model |
 
 ### Models DROPPED and why
 - **XTTS v2** — Coqui shut down December 2025. Dead project, no maintenance, restrictive license.
@@ -20,6 +22,7 @@ The **first Georgian TTS benchmark** — a comparative study of 4 open-source TT
 
 ### Models ADDED and why
 - **Qwen3-TTS** (January 2026) — Alibaba/Qwen. Discrete multi-codebook LM, trained on 5M+ hours, 10 languages. Apache 2.0.
+- **MagPIE TTS** (March 2026) — NVIDIA. 357M encoder-decoder with CTC monotonic alignment (prevents hallucinations). NanoCodec (22kHz, 8 codebooks). ByT5-small text encoder handles Georgian natively (byte-level). Trained on 105 languages.
 
 ## File Structure Per Pipeline
 Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.py`, `generate_report.py`, `requirements.txt`
@@ -41,7 +44,11 @@ Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.p
 ### Data Quality Pipeline (TODO — implement in shared/data/)
 Common Voice data is noisy. Before training, apply 6-stage Emilia-inspired filtering:
 
+<<<<<<< Updated upstream
 1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — all current pipelines use 24kHz
+=======
+1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — each pipeline resamples to its own rate (CosyVoice 3 and MagPIE TTS need 22,050 Hz, all others 24kHz)
+>>>>>>> Stashed changes
 2. **DNSMOS filter** — Microsoft DNSMOS P.835 model, threshold >= 3.0 (drops noisy recordings)
    - Package: `pip install onnxruntime`, model from Microsoft DNS Challenge
 3. **VAD trim** — Silero VAD to trim leading/trailing silence, drop clips with >50% silence
@@ -96,7 +103,11 @@ All metrics are **round-trip or reference-free** — no matched same-speaker ref
 #### 4. Speaker Similarity (Voice-cloning models ONLY)
 - **Method**: ECAPA-TDNN cosine similarity via SpeechBrain (`speechbrain/spkrec-ecapa-voxceleb`)
 - **What it measures**: Whether the generated voice matches the voice prompt that was provided
+<<<<<<< Updated upstream
 - **ONLY valid for**: F5-TTS, Orpheus, Qwen3-TTS
+=======
+- **ONLY valid for**: F5-TTS, CosyVoice 3, Orpheus, Qwen3-TTS, MagPIE TTS
+>>>>>>> Stashed changes
 - **NOT valid for**: CSM-1B (multi-speaker, no voice cloning condition)
 - **NOT valid for**: Cross-speaker comparison (comparing generated vs unrelated reference)
 
@@ -335,6 +346,64 @@ model = FastModel.get_peft_model(
 
 ---
 
+### 6. MagPIE TTS (nvidia/magpie_tts_multilingual_357m)
+
+- **GitHub**: https://github.com/NVIDIA/NeMo (examples/tts/magpietts.py)
+- **HuggingFace**: `nvidia/magpie_tts_multilingual_357m`
+- **Codec**: `nvidia/nemo-nano-codec-22khz-1.89kbps-21.5fps` (62M params)
+- **Install**: `pip install nemo_toolkit[tts] kaldialign`
+- **License**: NVIDIA Open Model License
+- **Paper**: https://arxiv.org/abs/2406.17957
+
+#### Architecture
+Encoder-decoder transformer (357M):
+- 6-layer causal encoder + 12-layer causal decoder (d_model=768, 12 heads)
+- Text conditioning via **ByT5-small** (byte-level, language-agnostic — Georgian works natively)
+- NanoCodec: 22kHz, 8 codebooks, 2016 codes each, 21.5 fps, 1.89 kbps
+- **CTC-based monotonic alignment** prevents hallucinations (skipped/repeated words)
+- Trained on 105 languages
+
+#### Fine-tuning method
+**Full SFT** via NeMo framework (`MagpieTTSModel`). No official LoRA support.
+
+#### Data format
+NeMo JSONL manifest:
+```json
+{"audio_filepath": "/abs/path.wav", "text": "transcript", "duration": 5.2, "speaker": 0, "target_audio_codes_path": "/abs/path/codes.pt", "context_audio_filepath": "/abs/path/ref.wav", "context_audio_duration": 5.0, "context_audio_codes_path": "/abs/path/ref_codes.pt"}
+```
+Audio: **22,050 Hz** WAV. Pre-computed codec codes stored as `.pt` files with shape `[8, num_frames]`.
+
+#### Commands
+```bash
+# Step 1: Resample audio from 24kHz to 22,050 Hz
+python train.py --data-dir ../../data/clean --prepare-only
+
+# Step 2: Full pipeline (resample + codec tokens + train)
+python train.py --data-dir ../../data/clean --lr 2e-5 --epochs 100
+
+# Or via NeMo CLI directly:
+python examples/tts/magpietts.py \
+    init_from_pretrained_model=nvidia/magpie_tts_multilingual_357m \
+    train_ds_meta.dataset.manifest_path=train_manifest_nemo.json \
+    val_ds_meta.dataset.manifest_path=eval_manifest_nemo.json \
+    trainer.devices=1 trainer.precision=bf16-mixed \
+    model.optim.lr=2e-5 max_epochs=100
+```
+
+#### Key details
+- **Sample rate**: **22,050 Hz** (NanoCodec requirement — different from most other pipelines at 24kHz)
+- **GPU**: A6000 (48GB) with bf16-mixed precision, batch_size=16
+- **Recommended**: LR 2e-5 (10x lower than pretraining default of 2e-4)
+- **Warmup**: 500 steps
+- **Grad clip**: 2.5
+- **Resume**: `resume_if_exists: true` in exp_manager auto-resumes from last checkpoint
+- **Text encoder**: ByT5-small is byte-level — handles Georgian without tokenizer modifications
+- **IMPORTANT**: Ensure `use_text_conditioning_encoder: true` in config (routes text through ByT5, not IPA phoneme tokenizer)
+- **Pre-compute codec tokens** to avoid redundant on-the-fly computation each epoch
+- **Supports**: DPO training (`+mode=dpo_train`) and GRPO (`+mode=onlinepo_train`)
+
+---
+
 ## Fairness Note
 
 Different models use different fine-tuning methods (LoRA vs full, Unsloth vs custom pipelines). This is **intentional and itself a finding**. The report should document for each model:
@@ -360,7 +429,11 @@ Managed by separate repo: **Training_Agent** (chat-powered Vast.ai GPU orchestra
 ## What's Implemented vs TODO
 
 ### Done
+<<<<<<< Updated upstream
 - Repository structure with 4 pipeline directories (f5_tts, orpheus, qwen3_tts, csm_1b)
+=======
+- Repository structure with all 7 pipeline directories (f5_tts, cosyvoice, orpheus, fish_speech, qwen3_tts, csm_1b, magpie_tts)
+>>>>>>> Stashed changes
 - Shared data download/prepare/splits code
 - Shared evaluation code (CER, UTMOS, FAD, speaker similarity)
 - Pipeline scaffolds (config, train, infer, evaluate, generate_report) with correct imports and CLI args
