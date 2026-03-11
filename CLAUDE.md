@@ -44,11 +44,7 @@ Each pipeline has: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.p
 ### Data Quality Pipeline (TODO — implement in shared/data/)
 Common Voice data is noisy. Before training, apply 6-stage Emilia-inspired filtering:
 
-<<<<<<< Updated upstream
-1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — all current pipelines use 24kHz
-=======
-1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — each pipeline resamples to its own rate (CosyVoice 3 and MagPIE TTS need 22,050 Hz, all others 24kHz)
->>>>>>> Stashed changes
+1. **Standardize** — Resample to 24kHz mono, normalize loudness to -23 LUFS. Store at 24kHz — each pipeline resamples to its own rate (MagPIE TTS needs 22,050 Hz, all others 24kHz)
 2. **DNSMOS filter** — Microsoft DNSMOS P.835 model, threshold >= 3.0 (drops noisy recordings)
    - Package: `pip install onnxruntime`, model from Microsoft DNS Challenge
 3. **VAD trim** — Silero VAD to trim leading/trailing silence, drop clips with >50% silence
@@ -103,11 +99,7 @@ All metrics are **round-trip or reference-free** — no matched same-speaker ref
 #### 4. Speaker Similarity (Voice-cloning models ONLY)
 - **Method**: ECAPA-TDNN cosine similarity via SpeechBrain (`speechbrain/spkrec-ecapa-voxceleb`)
 - **What it measures**: Whether the generated voice matches the voice prompt that was provided
-<<<<<<< Updated upstream
-- **ONLY valid for**: F5-TTS, Orpheus, Qwen3-TTS
-=======
-- **ONLY valid for**: F5-TTS, CosyVoice 3, Orpheus, Qwen3-TTS, MagPIE TTS
->>>>>>> Stashed changes
+- **ONLY valid for**: F5-TTS, Orpheus, Qwen3-TTS, MagPIE TTS
 - **NOT valid for**: CSM-1B (multi-speaker, no voice cloning condition)
 - **NOT valid for**: Cross-speaker comparison (comparing generated vs unrelated reference)
 
@@ -429,11 +421,7 @@ Managed by separate repo: **Training_Agent** (chat-powered Vast.ai GPU orchestra
 ## What's Implemented vs TODO
 
 ### Done
-<<<<<<< Updated upstream
-- Repository structure with 4 pipeline directories (f5_tts, orpheus, qwen3_tts, csm_1b)
-=======
-- Repository structure with all 7 pipeline directories (f5_tts, cosyvoice, orpheus, fish_speech, qwen3_tts, csm_1b, magpie_tts)
->>>>>>> Stashed changes
+- Repository structure with 5 pipeline directories (f5_tts, orpheus, qwen3_tts, csm_1b, magpie_tts)
 - Shared data download/prepare/splits code
 - Shared evaluation code (CER, UTMOS, FAD, speaker similarity)
 - Pipeline scaffolds (config, train, infer, evaluate, generate_report) with correct imports and CLI args
