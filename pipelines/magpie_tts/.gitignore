@@ -1,0 +1,20 @@
+# Generated audio
+*.wav
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Generated results (too large for git)
+results_final/generated/
+results_final/eval.log
+results_compare/
+results_best/
+results/generated/
+
+# Checkpoints
+*.ckpt
+*.nemo
+
+# NeMo experiment dirs
+exp/

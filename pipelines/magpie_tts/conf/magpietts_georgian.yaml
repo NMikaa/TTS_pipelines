@@ -1,0 +1,99 @@
+# MagPIE TTS Georgian fine-tuning config
+# Extends magpietts.yaml with all tokenizers from the pretrained multilingual model
+# so that text_embedding.weight shape matches (2362 tokens).
+# Phoneme dict files extracted from the pretrained .nemo archive for exact vocab match.
+#
+# IMPORTANT: Replace /ABSOLUTE/PATH/TO/pretrained_dicts/ with the actual absolute path
+# to the pretrained_dicts/ directory included in this repo (conf/pretrained_dicts/).
+# Hydra does not support relative paths for these fields.
+
+defaults:
+  - magpietts
+
+# Override text_tokenizers to match pretrained model's full set
+model:
+  text_tokenizers:
+    english_phoneme:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.IPATokenizer
+      punct: true
+      apostrophe: true
+      pad_with_space: false
+      g2p:
+        _target_: nemo.collections.tts.g2p.models.i18n_ipa.IpaG2p
+        phoneme_dict: "/ABSOLUTE/PATH/TO/pretrained_dicts/ipa_cmudict-0.7b_nv23.01.txt"
+        heteronyms: "/ABSOLUTE/PATH/TO/pretrained_dicts/heteronyms-052722"
+        phoneme_probability: 0.8
+        ignore_ambiguous_words: false
+        use_chars: true
+        use_stresses: true
+    spanish_phoneme:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.IPATokenizer
+      locale: "es-ES"
+      punct: true
+      apostrophe: true
+      pad_with_space: true
+      g2p:
+        _target_: nemo.collections.tts.g2p.models.i18n_ipa.IpaG2p
+        locale: "es-ES"
+        phoneme_dict: "/ABSOLUTE/PATH/TO/pretrained_dicts/es_ES_nv230301.dict"
+        phoneme_probability: 0.8
+        ignore_ambiguous_words: false
+        use_chars: true
+        use_stresses: true
+    german_phoneme:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.IPATokenizer
+      locale: "de-DE"
+      punct: true
+      apostrophe: true
+      pad_with_space: true
+      g2p:
+        _target_: nemo.collections.tts.g2p.models.i18n_ipa.IpaG2p
+        locale: "de-DE"
+        phoneme_dict: "/ABSOLUTE/PATH/TO/pretrained_dicts/de_nv230119.dict"
+        heteronyms: "/ABSOLUTE/PATH/TO/pretrained_dicts/de_nv230119.heteronym"
+        phoneme_probability: 0.8
+        ignore_ambiguous_words: false
+        use_chars: true
+        use_stresses: true
+        grapheme_case: "mixed"
+        grapheme_prefix: "#"
+    mandarin_phoneme:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.ChinesePhonemesTokenizer
+      punct: true
+      apostrophe: true
+      pad_with_space: true
+      g2p:
+        _target_: nemo.collections.tts.g2p.models.zh_cn_pinyin.ChineseG2p
+        phoneme_dict: "/ABSOLUTE/PATH/TO/pretrained_dicts/ipa_dict_nv23.05.txt"
+        word_segmenter: "jieba"
+        phoneme_prefix: ""
+        phoneme_case: "lower"
+        tone_prefix: "#"
+        ascii_letter_prefix: ""
+        ascii_letter_case: "upper"
+    japanese_phoneme:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.JapanesePhonemeTokenizer
+      punct: true
+      apostrophe: false
+      pad_with_space: true
+      g2p:
+        _target_: nemo.collections.tts.g2p.models.ja_jp_ipa.JapaneseKatakanaAccentG2p
+        ascii_letter_prefix: ""
+        ascii_letter_case: "upper"
+    french_chartokenizer:
+      _target_: AutoTokenizer
+      pretrained_model: "google/byt5-small"
+    hindi_chartokenizer:
+      _target_: nemo.collections.common.tokenizers.text_to_speech.tts_tokenizers.HindiCharsTokenizer
+      punct: true
+      apostrophe: true
+      pad_with_space: true
+    italian_phoneme:
+      _target_: AutoTokenizer
+      pretrained_model: "google/byt5-small"
+    vietnamese_phoneme:
+      _target_: AutoTokenizer
+      pretrained_model: "google/byt5-small"
+    text_ce_tokenizer:
+      _target_: AutoTokenizer
+      pretrained_model: "google/byt5-small"

@@ -1,0 +1,21 @@
+# MagPIE TTS pipeline dependencies
+# Install shared deps first: pip install -r ../../requirements.txt
+
+# NeMo framework with TTS support
+nemo_toolkit[tts]
+
+# Training
+pytorch-lightning>=2.0.0
+omegaconf>=2.3.0
+hydra-core>=1.3.0
+
+# Audio processing
+torchaudio>=2.0.0
+librosa>=0.10.0
+
+# Alignment metric (required by NeMo MagPIE)
+kaldialign
+
+# HuggingFace for model downloads and FLEURS dataset
+huggingface_hub>=0.20.0
+datasets>=2.16.0

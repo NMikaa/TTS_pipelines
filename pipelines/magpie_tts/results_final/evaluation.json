@@ -1,0 +1,11 @@
+{
+  "intelligibility": {
+    "metric": "cer_wer",
+    "asr_model": "meta_omnilingual_asr_7b",
+    "mean_cer": 0.02158921555955895,
+    "median_cer": 0.005747126436781609,
+    "mean_wer": 0.07082671530804333,
+    "median_wer": 0.045454545454545456,
+    "num_samples": 979
+  }
+}
