@@ -22,12 +22,8 @@ All models are evaluated with the same metrics on FLEURS Georgian (979 test samp
 | Metric | What it measures | Tool |
 |--------|-----------------|------|
 | **CER** | Intelligibility (round-trip TTS -> ASR -> text) | Meta Omnilingual ASR 7B |
-| **MCD** | Spectral closeness to reference audio | pymcd (DTW alignment) |
+| **MCD with DTW** | Spectral closeness to reference audio |
 | **Speaker similarity** | Voice identity preservation | ECAPA-TDNN cosine similarity (language-agnostic) |
-
-**Excluded metrics:**
-- **UTMOS** — Trained on English only, not calibrated for Georgian. Would produce misleading absolute scores.
-- **FAD** — Requires large sample sets from matched distributions; not meaningful for cross-speaker evaluation.
 
 ## Data
 
