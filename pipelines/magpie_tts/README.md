@@ -288,7 +288,6 @@ Evaluation uses round-trip CER/WER:
 2. Transcribe with [Meta Omnilingual ASR 7B](https://huggingface.co/facebook/omniASR-LLM-7B) (1.9% CER on Georgian, SOTA)
 3. Compute Character Error Rate and Word Error Rate vs original text
 
-**Why not UTMOS?** UTMOS is trained on English — it gives meaningless absolute scores for Georgian. Only useful for relative ranking between speakers/checkpoints.
 
 **Why not Whisper?** Whisper scores 78-88% WER on Georgian. Catastrophically bad. Never use Whisper for Georgian ASR.
 
