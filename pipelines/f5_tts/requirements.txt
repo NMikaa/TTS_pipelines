@@ -6,3 +6,9 @@ f5-tts
 
 # Training
 accelerate>=0.25.0
+
+# Evaluation
+datasets
+speechbrain
+pymcd
+huggingface_hub

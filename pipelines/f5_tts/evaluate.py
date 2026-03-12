@@ -8,7 +8,7 @@ Metrics:
 - Speaker similarity: only if --voice-prompt-dir is provided (voice cloning)
 
 Usage:
-    python evaluate.py --checkpoint checkpoints/best.pt --data-dir ./data --output-dir results/
+    python evaluate.py --checkpoint ckpts/georgian_tts/model_110000.pt --data-dir ./data --output-dir results/
 """
 
 import argparse
