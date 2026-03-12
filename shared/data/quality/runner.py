@@ -136,9 +136,10 @@ def run_pipeline(
     # Initial load
     if last_stage < 0:
         sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-        from shared.data.prepare import prepare_dataset
+        from shared.data import get_splits
         logger.info("Loading dataset...")
-        entries = prepare_dataset(data_dir)
+        train, val, test = get_splits(data_dir)
+        entries = train + val + test
         logger.info(f"Loaded {len(entries)} entries")
 
     total_start = len(entries)
