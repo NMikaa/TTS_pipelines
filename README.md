@@ -15,8 +15,8 @@ Evaluated on the full [FLEURS Georgian](https://huggingface.co/datasets/google/f
 | Model | Params | CER | WER | Trained Model | Status |
 |-------|--------|-----|-----|---------------|--------|
 | [MagPIE TTS](pipelines/magpie_tts/) | 357M | **2.16%** | **7.08%** | [NMikka/Magpie-TTS-Geo-357m](https://huggingface.co/NMikka/Magpie-TTS-Geo-357m) | Done |
-| [CSM-1B](pipelines/csm_1b/) | 1B | 10.81% | 24.94% | — | Done |
-| [F5-TTS](pipelines/f5_tts/) | 335M | — | — | — | Training |
+| [F5-TTS](pipelines/f5_tts/) | 335M | 5.09% | 18.66% | [NMikka/F5-TTS-Georgian](https://huggingface.co/NMikka/F5-TTS-Georgian) | Done |
+| [CSM-1B](pipelines/csm_1b/) | 1B | 10.81% | 24.94% | [NMikka/CSM-1B-Georgian](https://huggingface.co/NMikka/CSM-1B-Georgian) | Done |
 | [Orpheus](pipelines/orpheus/) | 3B | — | — | — | Training |
 | [Qwen3-TTS](pipelines/qwen3_tts/) | 0.6B | — | — | — | Training |
 
@@ -85,7 +85,6 @@ Each pipeline has its own README with detailed setup, training, and evaluation i
 ```
 TTS_pipelines/
 ├── README.md
-├── CLAUDE.md                           # Full project context and decisions
 ├── requirements.txt
 ├── shared/
 │   ├── data/
@@ -97,7 +96,7 @@ TTS_pipelines/
 │       ├── intelligibility.py          # CER/WER via Meta Omnilingual ASR
 │       └── speaker_similarity.py       # ECAPA-TDNN cosine sim
 ├── pipelines/
-│   ├── f5_tts/                         # F5-TTS (335M, DiT flow matching)
+│   ├── f5_tts/                         # F5-TTS (335M, DiT flow matching) ✓
 │   ├── orpheus/                        # Orpheus (3B, Llama + SNAC)
 │   ├── qwen3_tts/                      # Qwen3-TTS (0.6B, multi-codebook LM)
 │   ├── csm_1b/                         # CSM-1B (1B, Llama + Mimi) ✓
