@@ -13,14 +13,14 @@ from pathlib import Path
 from config import OrpheusConfig
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from shared.data import prepare_dataset, get_splits
+from shared.data import get_splits
 
 
 def main():
     parser = argparse.ArgumentParser(description="Fine-tune Orpheus TTS on Georgian")
-    parser.add_argument("--data-dir", type=str, default="./data")
+    parser.add_argument("--data-dir", type=str, default="../../data/clean")
     parser.add_argument("--run-name", type=str, default="georgian_orpheus_v1")
-    parser.add_argument("--model-size", type=str, default="400m", choices=["150m", "400m", "1b", "3b"])
+    parser.add_argument("--model-size", type=str, default="3b", choices=["3b"])
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--lr", type=float, default=None)
     parser.add_argument("--num-epochs", type=int, default=None)
@@ -38,9 +38,8 @@ def main():
     if args.full_finetune:
         config.use_lora = False
 
-    entries = prepare_dataset(config.data_dir)
-    train_ids, val_ids, test_ids = get_splits(config.data_dir)
-    print(f"Train: {len(train_ids)}, Val: {len(val_ids)}, Test: {len(test_ids)}")
+    train_entries, val_entries, test_entries = get_splits(config.data_dir)
+    print(f"Train: {len(train_entries)}, Val: {len(val_entries)}, Test: {len(test_entries)}")
 
     # TODO: Implement Orpheus fine-tuning
     # 1. Load pre-trained Orpheus model (selected size)

@@ -10,17 +10,16 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from shared.data import prepare_dataset, get_splits
+from shared.data import get_splits
 from shared.evaluation import run_full_evaluation
 
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate Qwen3-TTS on Georgian")
     parser.add_argument("--checkpoint", type=str, required=True)
-    parser.add_argument("--data-dir", type=str, default="./data")
+    parser.add_argument("--data-dir", type=str, default="../../data/clean")
     parser.add_argument("--output-dir", type=str, default="results/")
     parser.add_argument("--reference-audio-dir", type=str, default=None)
-    parser.add_argument("--voice-prompt-dir", type=str, default=None)
     parser.add_argument("--device", type=str, default="cuda")
     args = parser.parse_args()
 
@@ -28,14 +27,11 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     generated_dir = output_dir / "generated"
 
-    print("Step 1: Generating test set audio...")
-    from infer import generate_test_set
-    generate_test_set(args.checkpoint, args.data_dir, str(generated_dir))
-
-    entries = prepare_dataset(args.data_dir)
-    _, _, test_ids = get_splits(args.data_dir)
-    test_entries = [e for e in entries if e["id"] in set(test_ids)]
+    _, _, test_entries = get_splits(args.data_dir)
     references = {f"{e['id']}.wav": e["text"] for e in test_entries}
+
+    print("Step 1: Generating test set audio...")
+    raise NotImplementedError("Qwen3-TTS evaluation not yet implemented.")
 
     print("Step 2: Running evaluation...")
     results = run_full_evaluation(

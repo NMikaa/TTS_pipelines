@@ -54,7 +54,7 @@ def load_georgian_model(checkpoint_path: str, vocab_path: str, device: str = "cu
         checkpoint_path,
         mel_spec_type="vocos",
         vocab_file=vocab_path,
-        use_ema=True,
+        use_ema=False,
         device=device,
     )
 

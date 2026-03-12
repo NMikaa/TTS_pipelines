@@ -19,12 +19,18 @@ env/
 
 # Data (too large for git)
 /data/
+pipelines/*/data/train.csv
+pipelines/*/data/georgian_tts_char/
+
+# Audio files
 *.wav
 *.mp3
 *.flac
+*.m4a
 
 # Model weights & checkpoints
 checkpoints/
+ckpts/
 *.pt
 *.pth
 *.safetensors
@@ -43,9 +49,25 @@ wandb/
 *.tar.gz
 *.parquet
 
-# Evaluation outputs
+# Evaluation outputs (regenerable)
+pipelines/*/eval_fleurs/
+pipelines/*/eval_speaker_results/
+pipelines/*/eval_speaker_sim/
+pipelines/*/eval_checkpoints/
 results/
+results_final/
 outputs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Upload scripts (may contain tokens)
+upload_model.py
+upload_dataset.py
+
+# Build caches
+unsloth_compiled_cache/
 
 # OS
 .DS_Store

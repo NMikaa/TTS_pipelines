@@ -18,10 +18,8 @@ def generate_single(checkpoint: str, text: str, output: str, reference_audio: st
 
 
 def generate_test_set(checkpoint: str, data_dir: str, output_dir: str):
-    from shared.data import prepare_dataset, get_splits
-    entries = prepare_dataset(data_dir)
-    _, _, test_ids = get_splits(data_dir)
-    test_entries = [e for e in entries if e["id"] in set(test_ids)]
+    from shared.data import get_splits
+    _, _, test_entries = get_splits(data_dir)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     print(f"Generating {len(test_entries)} test samples...")
     raise NotImplementedError("Orpheus TTS inference not yet implemented.")
