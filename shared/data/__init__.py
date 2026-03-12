@@ -1,2 +1,2 @@
-from .prepare import prepare_dataset
+from .download import download_from_hf
 from .splits import get_splits

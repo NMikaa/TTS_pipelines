@@ -1,47 +1,48 @@
 """
-Deterministic hash-based train/val/test splits.
+Get train/val/test splits from the downloaded manifests.
 
-Uses MD5 hash of clip ID to ensure the same split regardless of file ordering.
-Split: 90% train, 5% val, 5% test.
+The HuggingFace dataset (NMikka/Common-Voice-Geo-Cleaned) ships with fixed splits:
+  - train: 20,300 samples
+  - eval: 1,001 samples
+  - test: 120 samples (best quality, speaker references)
+
+All pipelines MUST use get_splits() for fair comparison.
 """
 
-import hashlib
+import json
+from pathlib import Path
 from typing import List, Tuple
 
-from .prepare import prepare_dataset
 
-
-def _hash_split(clip_id: str) -> str:
-    """Assign a split based on MD5 hash of clip ID."""
-    h = hashlib.md5(clip_id.encode("utf-8")).hexdigest()
-    bucket = int(h[:8], 16) % 100
-    if bucket < 5:
-        return "test"
-    elif bucket < 10:
-        return "val"
-    else:
-        return "train"
-
-
-def get_splits(data_dir: str) -> Tuple[List[str], List[str], List[str]]:
-    """Get deterministic train/val/test split IDs.
+def get_splits(data_dir: str) -> Tuple[List[dict], List[dict], List[dict]]:
+    """Get the fixed train/eval/test splits.
 
     Args:
-        data_dir: Path to data directory.
+        data_dir: Path to data directory with manifests.
 
     Returns:
-        (train_ids, val_ids, test_ids) — lists of clip IDs.
+        (train_entries, eval_entries, test_entries) — lists of entry dicts.
     """
-    entries = prepare_dataset(data_dir)
+    train = _load_manifest(data_dir, "train")
+    val = _load_manifest(data_dir, "eval")
+    test = _load_manifest(data_dir, "test")
 
-    train_ids, val_ids, test_ids = [], [], []
-    for entry in entries:
-        split = _hash_split(entry["id"])
-        if split == "train":
-            train_ids.append(entry["id"])
-        elif split == "val":
-            val_ids.append(entry["id"])
-        else:
-            test_ids.append(entry["id"])
+    return train, val, test
 
-    return train_ids, val_ids, test_ids
+
+def _load_manifest(data_dir: str, split: str) -> List[dict]:
+    manifest_path = Path(data_dir) / f"{split}_manifest.json"
+    if not manifest_path.exists():
+        raise FileNotFoundError(
+            f"Manifest not found: {manifest_path}\n"
+            f"Run `python -m shared.data.download --output-dir {data_dir}` first."
+        )
+
+    entries = []
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            entries.append(json.loads(line))
+    return entries

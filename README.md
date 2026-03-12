@@ -94,10 +94,8 @@ TTS_pipelines/
 │   │   └── splits.py                   # Fixed train/val/test splits
 │   └── evaluation/
 │       ├── evaluate.py                 # Run all metrics
-│       ├── intelligibility.py          # CER via Meta Omnilingual ASR
-│       ├── naturalness.py              # UTMOS
-│       ├── speaker_similarity.py       # ECAPA-TDNN cosine sim
-│       └── fad.py                      # Frechet Audio Distance
+│       ├── intelligibility.py          # CER/WER via Meta Omnilingual ASR
+│       └── speaker_similarity.py       # ECAPA-TDNN cosine sim
 ├── pipelines/
 │   ├── f5_tts/                         # F5-TTS (335M, DiT flow matching)
 │   ├── orpheus/                        # Orpheus (3B, Llama + SNAC)
@@ -110,7 +108,7 @@ TTS_pipelines/
 ## Adding a New Pipeline
 
 1. Create a new directory under `pipelines/`
-2. Add: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.py`, `generate_report.py`, `requirements.txt`
+2. Add: `README.md`, `config.py`, `train.py`, `infer.py`, `evaluate.py`, `requirements.txt`
 3. Use `shared.data.get_splits()` for fair comparison
 4. Use `shared.evaluation` for consistent metrics
 

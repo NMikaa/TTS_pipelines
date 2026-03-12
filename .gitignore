@@ -51,5 +51,10 @@ outputs/
 .DS_Store
 Thumbs.db
 
+# Claude Code / AI context
+CLAUDE.md
+CLUSTER_PROMPT.md
+.claude/
+
 # Misc
 .env

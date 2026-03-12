@@ -1,5 +1,5 @@
 """
-Download Common Voice Georgian data from S3.
+Download Common Voice Georgian Cleaned data from HuggingFace.
 
 Usage:
     python -m shared.data.download --output-dir ./data
@@ -7,74 +7,82 @@ Usage:
 
 import argparse
 import json
-import os
-import subprocess
-import sys
 from pathlib import Path
 
-import boto3
+import soundfile as sf
+from datasets import load_dataset
 from tqdm import tqdm
 
 
-S3_BUCKET = "ttsopensource"
-S3_REGION = "eu-central-1"
-S3_PREFIX = "tts-georgian/"
-S3_FILES = {
-    "tts-georgian/manifests/train_manifest.json": "train_manifest.json",
-    "tts-georgian/audio_clean.tar.gz": "audio_clean.tar.gz",
-    "tts-georgian/manifests/eval_manifest.json": "eval_manifest.json",
-    "tts-georgian/manifests/speaker_refs_manifest.json": "speaker_refs_manifest.json",
-}
+HF_DATASET = "NMikka/Common-Voice-Geo-Cleaned"
 
 
-def download_from_s3(output_dir: str) -> Path:
-    """Download all data files from S3 and extract audio."""
+def download_from_hf(output_dir: str) -> Path:
+    """Download dataset from HuggingFace and export to local audio + manifest files.
+
+    Creates:
+        output_dir/
+            audio/           — WAV files (24kHz mono)
+            train_manifest.json   — JSONL manifest for training split
+            eval_manifest.json    — JSONL manifest for eval split
+            test_manifest.json    — JSONL manifest for test split (speaker refs)
+    """
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-
-    s3 = boto3.client("s3", region_name=S3_REGION)
-
-    for s3_key, local_name in S3_FILES.items():
-        local_path = output / local_name
-        if local_path.exists():
-            print(f"  Already exists: {local_path}")
-            continue
-
-        print(f"  Downloading s3://{S3_BUCKET}/{s3_key} -> {local_path}")
-        # Get file size for progress bar
-        meta = s3.head_object(Bucket=S3_BUCKET, Key=s3_key)
-        total_size = meta["ContentLength"]
-
-        with tqdm(total=total_size, unit="B", unit_scale=True, desc=local_name) as pbar:
-            s3.download_file(
-                S3_BUCKET, s3_key, str(local_path),
-                Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
-            )
-
-    # Extract audio.rar
     audio_dir = output / "audio"
-    rar_path = output / "audio.rar"
-    if not audio_dir.exists() and rar_path.exists():
-        print(f"  Extracting {rar_path} ...")
-        subprocess.run(["unrar", "x", "-o+", str(rar_path), str(output) + "/"], check=True)
-        # Common Voice clips are in clips_24k/, rename to audio/
-        clips_dir = output / "clips_24k"
-        if clips_dir.exists() and not audio_dir.exists():
-            clips_dir.rename(audio_dir)
-            print(f"  Renamed clips_24k/ -> audio/")
-    elif audio_dir.exists():
-        print(f"  Audio already extracted: {audio_dir}")
+    audio_dir.mkdir(exist_ok=True)
+
+    ds = load_dataset(HF_DATASET)
+
+    for split_name in ds:
+        split = ds[split_name]
+        manifest_path = output / f"{split_name}_manifest.json"
+
+        if manifest_path.exists():
+            print(f"  Manifest already exists: {manifest_path}")
+            # Still check if audio files exist
+            existing_audio = sum(1 for _ in audio_dir.glob("*.wav"))
+            if existing_audio >= len(split):
+                print(f"  Audio already extracted ({existing_audio} files)")
+                continue
+
+        print(f"  Processing {split_name} split ({len(split)} samples)...")
+        entries = []
+
+        for sample in tqdm(split, desc=split_name):
+            clip_id = sample["id"]
+            wav_path = audio_dir / f"{clip_id}.wav"
+
+            # Write audio if not already present
+            if not wav_path.exists():
+                audio = sample["audio"]
+                sf.write(str(wav_path), audio["array"], audio["sampling_rate"])
+
+            entries.append({
+                "id": clip_id,
+                "audio_filepath": str(wav_path.resolve()),
+                "text": sample["text"],
+                "speaker_id": str(sample["speaker_id"]),
+                "duration": sample["duration"],
+            })
+
+        # Write manifest
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            for entry in entries:
+                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+        print(f"  Wrote {len(entries)} entries to {manifest_path}")
 
     return output
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Download Georgian TTS data from S3")
+    parser = argparse.ArgumentParser(description="Download Georgian TTS data from HuggingFace")
     parser.add_argument("--output-dir", type=str, default="./data")
     args = parser.parse_args()
 
-    print("Downloading data from S3...")
-    download_from_s3(args.output_dir)
+    print(f"Downloading {HF_DATASET} from HuggingFace...")
+    download_from_hf(args.output_dir)
     print("Done.")
 
 
