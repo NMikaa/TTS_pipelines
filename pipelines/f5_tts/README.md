@@ -19,6 +19,8 @@ Fine-tuning [F5-TTS](https://github.com/SWivid/F5-TTS) (335M params) for Georgia
 
 Evaluated with round-trip ASR: F5-TTS generates audio → Meta Omnilingual ASR 7B transcribes → CER against original text.
 
+**Voice cloning note:** The model clones training speakers (Common Voice Georgian) well, but zero-shot voice cloning for arbitrary Georgian speakers is not reliable yet. This is an active area of improvement.
+
 ### In-Domain (5 Georgian test sentences, speaker 3)
 
 | Metric | Value |
@@ -60,9 +62,9 @@ From the repository root:
 python -m shared.data.download --output-dir ./data
 ```
 
-This downloads audio from S3 and creates `data/clean/` with:
-- `audio_clean/` — 24kHz WAV files
-- `train_manifest.json` — JSONL with `{id, audio_path, text, speaker_id, duration, ...}`
+This downloads from HuggingFace (`NMikka/Common-Voice-Geo-Cleaned`) and creates `data/clean/` with:
+- `audio/` — 24kHz WAV files
+- `train_manifest.json` — JSONL with `{id, audio_filepath, text, speaker_id, duration}`
 - `eval_manifest.json` — 1,001 held-out samples for evaluation
 - `speaker_refs_manifest.json` — Best reference clips per speaker (for voice cloning eval)
 
@@ -170,7 +172,7 @@ This generates 5 Georgian test sentences for each of the 12 speakers across chec
 | 4 | 0.708 | 6.92% |
 | 12 | 0.672 | 4.11% |
 
-Speaker 3 was selected for FLEURS evaluation (best balance of similarity + CER).
+Speaker 3 was selected for FLEURS evaluation after manually listening to the top 2 speakers by similarity (14 and 3) — speaker 3 sounded best overall.
 
 ### Step 6: FLEURS Evaluation (CER)
 
