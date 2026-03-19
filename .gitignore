@@ -74,7 +74,6 @@ unsloth_compiled_cache/
 Thumbs.db
 
 # Claude Code / AI context
-CLAUDE.md
 CLUSTER_PROMPT.md
 .claude/
 
