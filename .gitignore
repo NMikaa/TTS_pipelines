@@ -65,6 +65,7 @@ outputs/
 # Upload scripts (may contain tokens)
 upload_model.py
 upload_dataset.py
+upload_to_hf.py
 
 # Build caches
 unsloth_compiled_cache/
