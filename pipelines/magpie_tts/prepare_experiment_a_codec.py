@@ -15,7 +15,9 @@ Timeline:
 """
 
 import sys
+import logging
 from pathlib import Path
+from datetime import datetime
 
 # Add magpie_tts to path
 script_dir = Path(__file__).resolve().parent
@@ -23,6 +25,22 @@ sys.path.insert(0, str(script_dir))
 
 from config import MagPIEConfig
 from train import prepare_data
+
+# Setup logging to both console and file
+log_dir = Path("../../data/saba_experiment_a/logs")
+log_dir.mkdir(parents=True, exist_ok=True)
+log_file = log_dir / f"codec_preparation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(message)s",
+    datefmt="%H:%M:%S",
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler(sys.stdout),
+    ]
+)
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -38,33 +56,41 @@ def main():
         devices=2,  # DDP on 2 GPUs
     )
 
-    print("=" * 70)
-    print("EXPERIMENT A: DATA PREPARATION")
-    print("=" * 70)
-    print(f"Data directory: {config.data_dir}")
-    print(f"Train manifest: {config.train_manifest}")
-    print(f"Eval manifest: {config.eval_manifest}")
-    print()
+    logger.info("=" * 70)
+    logger.info("EXPERIMENT A: DATA PREPARATION")
+    logger.info("=" * 70)
+    logger.info(f"Log file: {log_file}")
+    logger.info(f"Data directory: {config.data_dir}")
+    logger.info(f"Train manifest: {config.train_manifest}")
+    logger.info(f"Eval manifest: {config.eval_manifest}")
+    logger.info(f"Hold-out manifest: {config.speaker_refs_manifest}")
+    logger.info("")
+    logger.info("Timeline: ~2-3 hours total")
+    logger.info("  - Resampling: ~10-15 minutes")
+    logger.info("  - Codec extraction: ~1-2 hours (GPU-intensive)")
+    logger.info("  - Manifest conversion: ~5-10 minutes")
+    logger.info("")
 
     # Run data preparation (steps 1-3: resample, codec, convert)
-    print("Starting data preparation...")
-    print("This will take 2-3 hours.")
-    print()
+    logger.info("Starting data preparation...")
+    logger.info("")
 
     try:
         train_manifest, eval_manifest = prepare_data(config)
-        print()
-        print("=" * 70)
-        print("DATA PREPARATION COMPLETE")
-        print("=" * 70)
-        print(f"Train manifest (NeMo): {train_manifest}")
-        print(f"Eval manifest (NeMo): {eval_manifest}")
-        print()
-        print("Next steps:")
-        print("  1. Check codec token extraction (ls data/saba_experiment_a/codec_codes/ | wc -l)")
-        print("  2. Run training: python run_experiment_a.py")
+        logger.info("")
+        logger.info("=" * 70)
+        logger.info("✓ DATA PREPARATION COMPLETE")
+        logger.info("=" * 70)
+        logger.info(f"Train manifest (NeMo): {train_manifest}")
+        logger.info(f"Eval manifest (NeMo): {eval_manifest}")
+        logger.info("")
+        logger.info("Next steps:")
+        logger.info("  1. Verify codec extraction:")
+        logger.info("     ls data/saba_experiment_a/codec_codes/ | wc -l")
+        logger.info("  2. Launch training:")
+        logger.info("     python run_experiment_a.py")
     except Exception as e:
-        print(f"Error during data preparation: {e}", file=sys.stderr)
+        logger.error(f"ERROR during data preparation: {e}", exc_info=True)
         raise
 
 

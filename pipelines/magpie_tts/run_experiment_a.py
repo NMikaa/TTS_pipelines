@@ -25,7 +25,25 @@ Timeline:
 
 import subprocess
 import sys
+import logging
 from pathlib import Path
+from datetime import datetime
+
+# Setup logging
+log_dir = Path("../../data/saba_experiment_a/logs")
+log_dir.mkdir(parents=True, exist_ok=True)
+log_file = log_dir / f"training_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(message)s",
+    datefmt="%H:%M:%S",
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler(sys.stdout),
+    ]
+)
+logger = logging.getLogger(__name__)
 
 
 def verify_data_preparation():
@@ -41,7 +59,7 @@ def verify_data_preparation():
         "codec_codes/": data_dir / "codec_codes",
     }
 
-    print("Verifying data preparation...")
+    logger.info("Verifying data preparation...")
     missing = []
     for name, path in checks.items():
         if not path.exists():
@@ -49,20 +67,20 @@ def verify_data_preparation():
         else:
             if path.is_dir():
                 count = len(list(path.glob("*")))
-                print(f"  ✓ {name:30} ({count} files)")
+                logger.info(f"  ✓ {name:30} ({count:,} files)")
             else:
                 size_mb = path.stat().st_size / 1024 / 1024
-                print(f"  ✓ {name:30} ({size_mb:.1f} MB)")
+                logger.info(f"  ✓ {name:30} ({size_mb:,.1f} MB)")
 
     if missing:
-        print(f"\n❌ Missing files/directories:")
+        logger.error(f"❌ Missing files/directories:")
         for name in missing:
-            print(f"  - {name}")
-        print("\nRun data preparation first:")
-        print("  python prepare_experiment_a_codec.py")
+            logger.error(f"    - {name}")
+        logger.error("\nRun data preparation first:")
+        logger.error("  python prepare_experiment_a_codec.py")
         return False
 
-    print("✓ Data preparation verified\n")
+    logger.info("✓ Data preparation verified\n")
     return True
 
 
@@ -73,8 +91,8 @@ def launch_training():
     nemo_script = nemo_root / "examples" / "tts" / "magpietts.py"
 
     if not nemo_script.exists():
-        print(f"❌ NeMo training script not found at {nemo_script}")
-        print("Clone NeMo: git clone --depth 1 https://github.com/NVIDIA/NeMo.git")
+        logger.error(f"❌ NeMo training script not found at {nemo_script}")
+        logger.error("Clone NeMo: git clone --depth 1 https://github.com/NVIDIA/NeMo.git")
         return False
 
     # Get NeMo manifests
@@ -99,23 +117,29 @@ def launch_training():
         "trainer.strategy=ddp",
     ]
 
-    print("=" * 70)
-    print("EXPERIMENT A: TRAINING")
-    print("=" * 70)
-    print(f"Config: magpietts_experiment_a.yaml")
-    print(f"Data directory: {data_dir}")
-    print(f"NeMo script: {nemo_script}")
-    print()
-    print("Training configuration:")
-    print("  - Model: nvidia/magpie_tts_multilingual_357m (357M params)")
-    print("  - Data: 182k samples (~393h) from 24 speakers")
-    print("  - Epochs: 100 (target ~80 with early stopping)")
-    print("  - Batch size: 48 per GPU × 2 = 96 effective")
-    print("  - Learning rate: 2e-5 (fine-tuning rate)")
-    print("  - Precision: bf16-mixed (saves ~50% VRAM)")
-    print("  - Early stopping: patience=5")
-    print(f"  - Distributed: DDP on 2 GPUs")
-    print()
+    logger.info("=" * 70)
+    logger.info("EXPERIMENT A: TRAINING")
+    logger.info("=" * 70)
+    logger.info(f"Log file: {log_file}")
+    logger.info(f"Config: magpietts_experiment_a.yaml")
+    logger.info(f"Data directory: {data_dir}")
+    logger.info(f"NeMo script: {nemo_script}")
+    logger.info("")
+    logger.info("Training configuration:")
+    logger.info("  - Model: nvidia/magpie_tts_multilingual_357m (357M params)")
+    logger.info("  - Data: 182k samples (~393h) from 24 speakers")
+    logger.info("  - Epochs: 100 (target ~80 with early stopping)")
+    logger.info("  - Batch size: 48 per GPU × 2 = 96 effective")
+    logger.info("  - Learning rate: 2e-5 (fine-tuning rate)")
+    logger.info("  - Precision: bf16-mixed (saves ~50% VRAM)")
+    logger.info("  - Early stopping: patience=5")
+    logger.info(f"  - Distributed: DDP on 2 GPUs")
+    logger.info("")
+    logger.info("W&B Integration:")
+    logger.info("  - Project: georgian-tts")
+    logger.info("  - Run: magpie-experiment-a")
+    logger.info("  - Monitor at: https://wandb.ai/")
+    logger.info("")
 
     # Set environment variables for distributed training
     env = {
@@ -124,8 +148,8 @@ def launch_training():
         "MKL_NUM_THREADS": "1",
     }
 
-    print("Launching training...")
-    print()
+    logger.info("Launching training...")
+    logger.info("")
 
     cmd = [
         sys.executable,
@@ -136,11 +160,14 @@ def launch_training():
         result = subprocess.run(cmd, cwd=str(Path(__file__).parent), env={**dict(__import__('os').environ), **env})
         return result.returncode == 0
     except Exception as e:
-        print(f"❌ Error launching training: {e}")
+        logger.error(f"❌ Error launching training: {e}", exc_info=True)
         return False
 
 
 def main():
+    logger.info("")
+    logger.info("Log file: " + str(log_file))
+
     # Verify data
     if not verify_data_preparation():
         sys.exit(1)
@@ -149,16 +176,17 @@ def main():
     success = launch_training()
 
     if success:
-        print()
-        print("=" * 70)
-        print("✓ Training launched successfully")
-        print("=" * 70)
-        print()
-        print("Monitor progress:")
-        print("  - TensorBoard: tensorboard --logdir=exp/")
-        print("  - WandB: https://wandb.ai/")
-        print()
-        print("Training will resume automatically from last checkpoint if interrupted.")
+        logger.info("")
+        logger.info("=" * 70)
+        logger.info("✓ Training launched successfully")
+        logger.info("=" * 70)
+        logger.info("")
+        logger.info("Monitor progress:")
+        logger.info("  - TensorBoard: tensorboard --logdir=exp/")
+        logger.info("  - WandB: https://wandb.ai/")
+        logger.info("  - Training log: " + str(log_file))
+        logger.info("")
+        logger.info("Training will resume automatically from last checkpoint if interrupted.")
     else:
         sys.exit(1)
 
