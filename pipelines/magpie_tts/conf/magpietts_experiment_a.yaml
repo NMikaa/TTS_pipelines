@@ -1,0 +1,163 @@
+# Experiment A: Georgian fine-tuning on 393h punctuated saba_data
+# Base config: magpietts_georgian.yaml (includes all pretrained tokenizers)
+#
+# Key settings:
+#  - Data: 182k training samples (~393h), 24 speakers, 98/2 train/val split
+#  - Hold-out: ზაალ სამადაშვილი (0.25h, 145 samples) for zero-shot testing
+#  - Model: Expanded baked embeddings (5→41), joint context encoder training
+#  - Training: 100 epochs, batch_size=48, bf16 precision, 2 GPU DDP
+#  - Early stopping: patience=5
+
+# Inherit from Georgian base config (sets up tokenizers, etc.)
+defaults:
+  - magpietts_georgian
+
+# ============================================================================
+# TRAINING CONFIGURATION
+# ============================================================================
+
+max_epochs: 100
+warmup_steps: 500
+weight_decay: 0.0
+
+# Learning rate: 2e-5 (10x lower than pretraining 2e-4 for fine-tuning)
+optim:
+  name: adamw
+  lr: 2.0e-5
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  weight_decay: 0.0
+
+# LR scheduler: exponential decay, γ=0.998/step
+lr_scheduler:
+  name: ExponentialLR
+  gamma: 0.998
+
+grad_clip_val: 2.5
+grad_norm_queue_length: 0
+
+# ============================================================================
+# DATA CONFIGURATION
+# ============================================================================
+
+batch_size: 48  # 48 per GPU × 2 = 96 effective
+num_workers: 2  # Prevent thread exhaustion in dataloader
+
+train_ds_meta:
+  georgian_train:
+    manifest_path: ???  # Override at runtime
+    audio_dir: ???      # Override at runtime
+    feature_dir: ???    # Override at runtime
+    sample_weight: 1.0
+
+val_ds_meta:
+  georgian_eval:
+    manifest_path: ???  # Override at runtime
+    audio_dir: ???      # Override at runtime
+    feature_dir: ???    # Override at runtime
+
+# ============================================================================
+# MODEL CONFIGURATION
+# ============================================================================
+
+model:
+  # Baked speaker embeddings: expand from 5 to 41 speakers
+  # (5 pretrained + 36 Georgian speakers — adjusted for actual 24 speakers)
+  num_speakers: 41
+
+  # Optimizer (standard from base config)
+  optim:
+    name: adamw
+    lr: 2.0e-5
+    betas: [0.9, 0.999]
+
+  # Tokenizers: use ByT5-small for Georgian (language-agnostic byte-level)
+  tokenizers:
+    - name: text_ce_tokenizer
+
+# ============================================================================
+# DISTRIBUTED TRAINING
+# ============================================================================
+
+trainer:
+  devices: 2
+  num_nodes: 1
+  strategy: ddp
+
+  # Validation
+  check_val_every_n_epoch: 1
+  val_check_interval: 1.0
+  num_sanity_val_steps: 0
+
+  # Checkpointing: save top 5 + last
+  enable_checkpointing: true
+  checkpoint:
+    dirpath: null  # Will be set by exp_manager
+    filename: "{epoch}-{step}-{val_loss:.2f}"
+    monitor: val_loss
+    mode: min
+    save_top_k: 5
+    save_last: true
+
+  # Early stopping: stop if val loss doesn't improve for 5 epochs
+  early_stopping:
+    monitor: val_loss
+    patience: 5
+    mode: min
+    stopping_threshold: null
+    divergence_threshold: null
+    check_finite: true
+    strict_mode: false
+    check_on_train_epoch_end: false
+
+  # Logging
+  log_every_n_steps: 50
+  enable_progress_bar: true
+
+  # Precision
+  precision: bf16-mixed
+
+  # Random seed
+  seed: 42
+
+# ============================================================================
+# EXPERIMENT MANAGER
+# ============================================================================
+
+exp_manager:
+  exp_dir: ./exp
+  name: experiment_a_punctuated_joint_training
+  version: null  # Auto-increment
+  use_datetime_version: true
+
+  # Logging
+  create_tensorboard_logger: true
+  create_wandb_logger: true
+  wandb_logger_kwargs:
+    project: georgian-tts
+    entity: null
+    name: magpie-experiment-a
+    tags: [experiment-a, saba, georgian, punctuated]
+    notes: "393h punctuated Georgian speech, 24 speakers, joint baked+context training"
+
+  # Checkpoint
+  checkpoint_callback_params:
+    monitor: val_loss
+    save_top_k: 5
+    save_last: true
+    dirpath: null  # Will be filled by exp_manager
+    filename: "{epoch:03d}-{step:06d}-{val_loss:.2f}"
+
+# ============================================================================
+# PRETRAINED MODEL
+# ============================================================================
+
+init_from_pretrained_model: nvidia/magpie_tts_multilingual_357m
+
+# Voice cloning: train context encoder jointly with baked embeddings
+# (not frozen, both pathways active from epoch 1)
+context_encoder_enabled: true
+freeze_for_cloning: false  # Train both baked embeddings AND context encoder
+
+# Classifier-free guidance (optional, not used in base config)
+cfg_unconditional_prob: 0.1
