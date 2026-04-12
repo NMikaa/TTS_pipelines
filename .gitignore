@@ -58,6 +58,33 @@ results/
 results_final/
 outputs/
 
+# OmniVoice training artifacts (huge — not for git)
+pipelines/omnivoice/exp/
+pipelines/omnivoice/data/095/
+pipelines/omnivoice/data/097/
+pipelines/omnivoice/data/099/
+pipelines/omnivoice/data/english/
+pipelines/omnivoice/data/*.jsonl
+pipelines/omnivoice/eval_data/cv_geo/audio/
+pipelines/omnivoice/eval_data/fleurs_ka/audio/
+pipelines/omnivoice/eval_data/fleurs_en/audio/
+
+# OmniVoice eval generated audio (huge, regenerable)
+pipelines/omnivoice/eval_results/*/cv_geo/
+pipelines/omnivoice/eval_results/*/fleurs_ka/
+pipelines/omnivoice/eval_results/*/fleurs_en_cross/
+pipelines/omnivoice/eval_results/*/fleurs_en_regress/
+
+# But DO keep the aggregated metrics files
+!pipelines/omnivoice/eval_results/comparison.json
+!pipelines/omnivoice/eval_results/sim_utmos.json
+!pipelines/omnivoice/eval_results/ttsds_fleurs/
+!pipelines/omnivoice/eval_results/ttsds_minimal/
+!pipelines/omnivoice/eval_results/ttsds/
+
+# Test list JSONLs contain absolute paths — regenerable from FLEURS/CV
+pipelines/omnivoice/eval_data/test_lists/
+
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
@@ -65,6 +92,7 @@ outputs/
 # Upload scripts (may contain tokens)
 upload_model.py
 upload_dataset.py
+upload_to_hf.py
 
 # Build caches
 unsloth_compiled_cache/
@@ -79,3 +107,20 @@ CLUSTER_PROMPT.md
 
 # Misc
 .env
+
+# Gradio cache
+.gradio/
+pipelines/*/.gradio/
+
+# Internal pipelines (not for public release)
+pipelines/punctuation_model/
+pipelines/resegment/
+old_aligner/
+exp/
+model_cache/
+boloaveraged_top5.ckpt
+georgian_bpe_lm.bin
+NeMo/
+OmniVoice/
+venv_*/
+.gradio/

@@ -1,0 +1,186 @@
+{
+  "095_ckpt1606": {},
+  "095_ckpt803": {},
+  "097_ckpt1112": {
+    "cv_geo": {
+      "utmos": 3.301,
+      "sim_o": 0.662
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.775,
+      "sim_o": 0.564
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.323
+    },
+    "fleurs_ka": {
+      "utmos": 2.992
+    }
+  },
+  "097_ckpt556": {
+    "cv_geo": {
+      "utmos": 3.221,
+      "sim_o": 0.674
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.782,
+      "sim_o": 0.553
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.296
+    },
+    "fleurs_ka": {
+      "utmos": 2.948
+    }
+  },
+  "099_ckpt1000": {
+    "cv_geo": {
+      "utmos": 3.23,
+      "sim_o": 0.669
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.707,
+      "sim_o": 0.566
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.297
+    },
+    "fleurs_ka": {
+      "utmos": 2.93
+    }
+  },
+  "099_ckpt2000": {},
+  "099v2_ckpt1200": {
+    "cv_geo": {
+      "utmos": 3.264,
+      "sim_o": 0.679
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.82,
+      "sim_o": 0.559
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.295
+    },
+    "fleurs_ka": {
+      "utmos": 2.984
+    }
+  },
+  "099v2_ckpt1440": {
+    "cv_geo": {
+      "utmos": 3.229,
+      "sim_o": 0.68
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.835,
+      "sim_o": 0.557
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.315
+    },
+    "fleurs_ka": {
+      "utmos": 2.984
+    }
+  },
+  "099v2_ckpt1500": {
+    "cv_geo": {
+      "utmos": 3.247,
+      "sim_o": 0.679
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.809,
+      "sim_o": 0.563
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.293
+    },
+    "fleurs_ka": {
+      "utmos": 2.99
+    }
+  },
+  "099v2_ckpt240": {
+    "cv_geo": {
+      "utmos": 3.236,
+      "sim_o": 0.693
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.67,
+      "sim_o": 0.571
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.186
+    },
+    "fleurs_ka": {
+      "utmos": 2.87
+    }
+  },
+  "099v2_ckpt480": {
+    "cv_geo": {
+      "utmos": 3.218,
+      "sim_o": 0.683
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.769,
+      "sim_o": 0.56
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.305
+    },
+    "fleurs_ka": {
+      "utmos": 2.92
+    }
+  },
+  "099v2_ckpt720": {
+    "cv_geo": {
+      "utmos": 3.254,
+      "sim_o": 0.681
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.775,
+      "sim_o": 0.56
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.308
+    },
+    "fleurs_ka": {
+      "utmos": 2.935
+    }
+  },
+  "099v2_ckpt960": {
+    "cv_geo": {
+      "utmos": 3.26,
+      "sim_o": 0.682
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.827,
+      "sim_o": 0.558
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.272
+    },
+    "fleurs_ka": {
+      "utmos": 2.965
+    }
+  },
+  "magpie_tts": {
+    "fleurs_ka": {
+      "utmos": 3.14
+    }
+  },
+  "pretrained": {
+    "cv_geo": {
+      "utmos": 3.064,
+      "sim_o": 0.72
+    },
+    "fleurs_en_cross": {
+      "utmos": 3.555,
+      "sim_o": 0.572
+    },
+    "fleurs_en_regress": {
+      "utmos": 3.124
+    },
+    "fleurs_ka": {
+      "utmos": 2.749
+    }
+  }
+}

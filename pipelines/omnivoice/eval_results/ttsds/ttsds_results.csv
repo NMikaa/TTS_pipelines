@@ -1,0 +1,141 @@
+benchmark_name,benchmark_category,dataset,score,time_taken,noise_dataset,reference_dataset
+Wav2Vec2-XLSR-53,GENERIC,pretrained,94.0203914958189,4576.130101919174,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt240,93.95835487197492,4597.249905347824,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,097_ckpt556,93.77547775845481,4569.7440803050995,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt480,93.74603609653867,4569.967243432999,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt1500,93.62616693330435,4563.448606491089,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt1440,93.62270503772689,4614.192759752274,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt1200,93.60170950773087,4583.691453695297,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099_ckpt1000,93.58719083094533,4619.687898635864,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt720,93.57019698832825,4584.294798374176,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,097_ckpt1112,93.5613645560028,4545.222889184952,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099v2_ckpt960,93.531069259178,4583.95615696907,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,095_ckpt1606,93.4492231151587,4532.207580089569,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,095_ckpt803,93.41772851495574,4583.896389961243,noise_uniform_distribution,cv_geo_real
+Wav2Vec2-XLSR-53,GENERIC,099_ckpt2000,93.40477948957519,4556.320293188095,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,097_ckpt556,94.26887801139544,2469.179347515106,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,095_ckpt803,93.9208838899469,2460.5346586704254,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt240,93.8782738755086,2483.8476510047913,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,095_ckpt1606,93.8767605258123,2478.506581068039,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,097_ckpt1112,93.86441705427809,2467.247468471527,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,pretrained,93.80928355303014,2457.5112919807434,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt1500,93.75007709351011,2459.07585644722,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt480,93.73388714404702,2451.025149822235,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099_ckpt1000,93.72003928162636,2531.3231155872345,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt1200,93.71037467191876,2511.218731403351,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt720,93.69622473673927,2460.4621410369873,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt1440,93.61215351097901,2491.010575532913,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099_ckpt2000,93.57152899250754,2480.3248715400696,noise_uniform_distribution,cv_geo_real
+WavLM,GENERIC,099v2_ckpt960,93.51429298014439,2467.6502335071564,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,097_ckpt556,95.11002876178206,2150.4282989501953,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,pretrained,95.08824745322968,1162.5992667675018,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt240,94.96740695947032,1165.5298810005188,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt480,94.94787396790149,1153.9587256908417,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099_ckpt1000,94.87613729073287,2183.3287177085876,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,097_ckpt1112,94.85907400907382,2173.7253766059875,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt1500,94.85622018042476,1157.4593749046326,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt1200,94.83380276999544,2154.7039425373077,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt720,94.82901382150605,1163.14910364151,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt1440,94.81075169467097,1659.219702720642,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,095_ckpt803,94.70236752961418,2142.236356496811,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,095_ckpt1606,94.68617399933663,2143.000751018524,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099_ckpt2000,94.66145642564472,2148.1582369804382,noise_uniform_distribution,cv_geo_real
+mHuBERT-147,GENERIC,099v2_ckpt960,94.65793161248075,1178.753658771515,noise_uniform_distribution,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,pretrained,98.36154931654163,4564.096750020981,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt480,98.18337806765763,4541.3687200546265,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt240,98.18318663628915,4593.54616355896,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt720,98.16681732926757,4550.098188638687,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt1440,98.12560800308904,4600.2175052165985,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099_ckpt1000,98.12107630377795,4523.179041385651,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,097_ckpt556,98.09804835908358,4582.021775960922,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt1200,98.07777980293534,4570.619588136673,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,095_ckpt803,98.07544451413513,4536.715237379074,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt1500,98.03029974164245,4573.1992971897125,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,095_ckpt1606,98.0169398721816,4560.389658689499,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099v2_ckpt960,97.99874931203242,4519.344352722168,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,097_ckpt1112,97.90008160405105,4557.495032310486,noise_all_ones,cv_geo_real
+Wav2Vec2 Activations,INTELLIGIBILITY,099_ckpt2000,97.7376834709727,4528.032730340958,noise_all_ones,cv_geo_real
+Allosaurus SR,PROSODY,095_ckpt1606,,,,
+Allosaurus SR,PROSODY,095_ckpt803,,,,
+Allosaurus SR,PROSODY,097_ckpt1112,,,,
+Allosaurus SR,PROSODY,097_ckpt556,,,,
+Allosaurus SR,PROSODY,099_ckpt1000,,,,
+Allosaurus SR,PROSODY,099_ckpt2000,,,,
+Allosaurus SR,PROSODY,099v2_ckpt1200,,,,
+Allosaurus SR,PROSODY,099v2_ckpt1440,,,,
+Allosaurus SR,PROSODY,099v2_ckpt1500,,,,
+Allosaurus SR,PROSODY,099v2_ckpt240,,,,
+Allosaurus SR,PROSODY,099v2_ckpt480,,,,
+Allosaurus SR,PROSODY,099v2_ckpt720,,,,
+Allosaurus SR,PROSODY,099v2_ckpt960,,,,
+Allosaurus SR,PROSODY,pretrained,,,,
+MPM,PROSODY,099v2_ckpt1500,96.52222203726186,1016.7294235229492,noise_normal_distribution,cv_geo_real
+MPM,PROSODY,095_ckpt1606,,,,
+MPM,PROSODY,095_ckpt803,,,,
+MPM,PROSODY,097_ckpt1112,,,,
+MPM,PROSODY,097_ckpt556,,,,
+MPM,PROSODY,099_ckpt1000,,,,
+MPM,PROSODY,099_ckpt2000,,,,
+MPM,PROSODY,099v2_ckpt1200,,,,
+MPM,PROSODY,099v2_ckpt1440,,,,
+MPM,PROSODY,099v2_ckpt240,,,,
+MPM,PROSODY,099v2_ckpt480,,,,
+MPM,PROSODY,099v2_ckpt720,,,,
+MPM,PROSODY,099v2_ckpt960,,,,
+MPM,PROSODY,pretrained,,,,
+Pitch,PROSODY,095_ckpt1606,,,,
+Pitch,PROSODY,095_ckpt803,,,,
+Pitch,PROSODY,097_ckpt1112,,,,
+Pitch,PROSODY,097_ckpt556,,,,
+Pitch,PROSODY,099_ckpt1000,,,,
+Pitch,PROSODY,099_ckpt2000,,,,
+Pitch,PROSODY,099v2_ckpt1200,,,,
+Pitch,PROSODY,099v2_ckpt1440,,,,
+Pitch,PROSODY,099v2_ckpt1500,,,,
+Pitch,PROSODY,099v2_ckpt240,,,,
+Pitch,PROSODY,099v2_ckpt480,,,,
+Pitch,PROSODY,099v2_ckpt720,,,,
+Pitch,PROSODY,099v2_ckpt960,,,,
+Pitch,PROSODY,pretrained,,,,
+mHubert-147 Token SR,PROSODY,pretrained,78.70955066777164,1219.2469341754913,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt240,76.94595505934907,1091.1023032665253,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,097_ckpt1112,76.4757199754214,1898.5683307647705,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt720,76.47093771003014,1151.1959676742554,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt960,76.35520633913598,1091.5014317035675,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,095_ckpt803,76.33685973519398,1889.1883490085602,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1500,76.31017327928356,1090.9956257343292,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,097_ckpt556,76.30548743182948,1901.021469593048,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt480,76.27571483996684,1074.7135317325592,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1200,76.2691443167505,1917.340015411377,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,095_ckpt1606,76.10791021084923,1918.520889043808,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099_ckpt1000,75.98575786966182,1894.6308846473694,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099_ckpt2000,75.61709049102441,1886.8147473335266,noise_uniform_distribution,cv_geo_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1440,75.43913726481966,1886.812959432602,noise_uniform_distribution,cv_geo_real
+DVector,SPEAKER,095_ckpt1606,,,,
+DVector,SPEAKER,095_ckpt803,,,,
+DVector,SPEAKER,097_ckpt1112,,,,
+DVector,SPEAKER,097_ckpt556,,,,
+DVector,SPEAKER,099_ckpt1000,,,,
+DVector,SPEAKER,099_ckpt2000,,,,
+DVector,SPEAKER,099v2_ckpt1200,,,,
+DVector,SPEAKER,099v2_ckpt1440,,,,
+DVector,SPEAKER,099v2_ckpt1500,,,,
+DVector,SPEAKER,099v2_ckpt240,,,,
+DVector,SPEAKER,099v2_ckpt480,,,,
+DVector,SPEAKER,099v2_ckpt720,,,,
+DVector,SPEAKER,099v2_ckpt960,,,,
+DVector,SPEAKER,pretrained,,,,
+WeSpeaker,SPEAKER,099v2_ckpt240,81.58665707968264,1248.1462523937225,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt480,81.37865405861437,1215.875983953476,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt1440,81.3680952680648,1250.1461491584778,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt720,81.30462265309492,1241.9415838718414,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,pretrained,81.2024282658491,1255.3241090774536,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt1200,81.1695551472929,1222.0808646678925,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt1500,81.1404699385798,1302.1967084407806,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,097_ckpt556,81.0375864883381,1231.2803423404694,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099_ckpt1000,81.01754833636952,1222.0097386837006,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099v2_ckpt960,80.9413529758436,1252.8504874706268,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,095_ckpt803,80.89112901781671,1212.7888839244843,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,097_ckpt1112,80.84011908743976,1208.5152597427368,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,095_ckpt1606,80.83439160014372,1269.5401546955109,noise_uniform_distribution,cv_geo_real
+WeSpeaker,SPEAKER,099_ckpt2000,80.0100021191247,1227.0491724014282,noise_uniform_distribution,cv_geo_real

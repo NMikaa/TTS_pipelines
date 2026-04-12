@@ -1,0 +1,31 @@
+benchmark_name,benchmark_category,dataset,score,time_taken,noise_dataset,reference_dataset
+Pitch,PROSODY,pretrained,85.64326784204862,208.9576392173767,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099_ckpt2000,84.42374404321144,198.8944621086121,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt240,83.16580922365046,204.069979429245,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt720,82.7778066423175,204.84252429008484,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099_ckpt1000,82.51309758784741,208.87927889823916,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,095_ckpt803,82.08485898010188,208.8950202465057,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt480,82.0705137012582,203.10748720169067,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,095_ckpt1606,80.72605368537474,202.71818280220032,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt960,80.2694102215951,205.13288402557373,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt1200,79.92543889631905,209.57163190841675,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt1500,79.8915459645862,210.7015302181244,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,097_ckpt556,79.26414581867517,196.1207046508789,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,097_ckpt1112,78.65960234434144,209.90854144096372,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,099v2_ckpt1440,78.39150088103035,207.0721571445465,noise_all_ones,fleurs_ka_real
+Pitch,PROSODY,magpie_tts,77.95263488945383,197.51242232322693,noise_all_ones,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,magpie_tts,85.08703208056801,2989.5929186344147,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,pretrained,76.33921649166655,3038.424088716507,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,095_ckpt803,76.32115065847773,2947.341297388077,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1200,75.909213296138,3014.0906915664673,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,095_ckpt1606,75.80900103482044,2924.6961064338684,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1500,75.78873350116018,2974.772626399994,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt1440,75.52737667917985,3031.711690425873,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt480,75.51219805527452,3032.125583410263,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt960,75.5023645949772,2981.842428922653,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099_ckpt1000,75.45687594599016,3047.032806158066,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,097_ckpt1112,75.1342597088904,2919.2639298439026,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt720,75.10449182698015,3031.0232298374176,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099v2_ckpt240,75.08534850386516,3030.062748193741,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,097_ckpt556,74.87140009285817,2982.5915734767914,noise_uniform_distribution,fleurs_ka_real
+mHubert-147 Token SR,PROSODY,099_ckpt2000,74.8049981568399,2972.4267885684967,noise_uniform_distribution,fleurs_ka_real

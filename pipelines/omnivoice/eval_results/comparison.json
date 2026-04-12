@@ -1,0 +1,366 @@
+{
+  "095_ckpt1606": {},
+  "095_ckpt803": {},
+  "097_ckpt1112": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 1.29,
+      "wer_mean": 1.29,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 3.56,
+      "wer_mean": 3.56,
+      "cer_median": 2.56,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 3.21,
+      "wer_mean": 3.22,
+      "cer_median": 1.19,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 2.04,
+      "wer_mean": 2.03,
+      "cer_median": 0.86
+    }
+  },
+  "097_ckpt556": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 1.18,
+      "wer_mean": 1.18,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 2.72,
+      "wer_mean": 2.72,
+      "cer_median": 1.76,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 3.24,
+      "wer_mean": 3.25,
+      "cer_median": 1.33,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.67,
+      "wer_mean": 1.66,
+      "cer_median": 0.79
+    }
+  },
+  "099_ckpt1000": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.86,
+      "wer_mean": 0.86,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 3.0,
+      "wer_mean": 3.0,
+      "cer_median": 2.02,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 3.22,
+      "wer_mean": 3.22,
+      "cer_median": 1.21,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.63,
+      "wer_mean": 1.63,
+      "cer_median": 0.74
+    }
+  },
+  "099_ckpt2000": {},
+  "099v2_ckpt1200": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.7,
+      "wer_mean": 0.7,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.87,
+      "wer_mean": 1.87,
+      "cer_median": 0.93,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 3.12,
+      "wer_mean": 3.12,
+      "cer_median": 1.57,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.55,
+      "wer_mean": 1.55,
+      "cer_median": 0.68
+    }
+  },
+  "099v2_ckpt1440": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.65,
+      "wer_mean": 0.65,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 2.21,
+      "wer_mean": 2.21,
+      "cer_median": 1.27,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 3.29,
+      "wer_mean": 3.29,
+      "cer_median": 1.59,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.6,
+      "wer_mean": 1.59,
+      "cer_median": 0.7
+    }
+  },
+  "099v2_ckpt1500": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.84,
+      "wer_mean": 0.84,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.86,
+      "wer_mean": 1.86,
+      "cer_median": 1.22,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.75,
+      "wer_mean": 2.76,
+      "cer_median": 1.05,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.62,
+      "wer_mean": 1.61,
+      "cer_median": 0.69
+    }
+  },
+  "099v2_ckpt240": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.73,
+      "wer_mean": 0.72,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.72,
+      "wer_mean": 1.72,
+      "cer_median": 0.98,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.98,
+      "wer_mean": 3.0,
+      "cer_median": 1.04,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.7,
+      "wer_mean": 1.7,
+      "cer_median": 0.76
+    }
+  },
+  "099v2_ckpt480": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.85,
+      "wer_mean": 0.85,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 2.06,
+      "wer_mean": 2.06,
+      "cer_median": 1.39,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.88,
+      "wer_mean": 2.89,
+      "cer_median": 1.19,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.61,
+      "wer_mean": 1.61,
+      "cer_median": 0.74
+    }
+  },
+  "099v2_ckpt720": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 1.02,
+      "wer_mean": 1.02,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.96,
+      "wer_mean": 1.96,
+      "cer_median": 1.21,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.86,
+      "wer_mean": 2.88,
+      "cer_median": 1.15,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.57,
+      "wer_mean": 1.56,
+      "cer_median": 0.69
+    }
+  },
+  "099v2_ckpt960": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 1.07,
+      "wer_mean": 1.07,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.98,
+      "wer_mean": 1.98,
+      "cer_median": 1.37,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.62,
+      "wer_mean": 2.62,
+      "cer_median": 1.12,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.59,
+      "wer_mean": 1.59,
+      "cer_median": 0.73
+    }
+  },
+  "magpie_tts": {
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.8,
+      "wer_mean": 1.79,
+      "cer_median": 1.05
+    }
+  },
+  "pretrained": {
+    "cv_geo": {
+      "test_set": "cv_geo",
+      "num_samples": 108,
+      "cer_mean": 0.67,
+      "wer_mean": 0.67,
+      "cer_median": 0.0
+    },
+    "fleurs_en_cross": {
+      "test_set": "fleurs_en_cross",
+      "num_samples": 100,
+      "cer_mean": 1.68,
+      "wer_mean": 1.68,
+      "cer_median": 0.88,
+      "leakage_pct": 0.0
+    },
+    "fleurs_en_regress": {
+      "test_set": "fleurs_en_regress",
+      "num_samples": 100,
+      "cer_mean": 2.95,
+      "wer_mean": 2.95,
+      "cer_median": 1.15,
+      "leakage_pct": 0.0
+    },
+    "fleurs_ka": {
+      "test_set": "fleurs_ka",
+      "num_samples": 979,
+      "cer_mean": 1.64,
+      "wer_mean": 1.64,
+      "cer_median": 0.75
+    }
+  }
+}

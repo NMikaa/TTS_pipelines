@@ -73,7 +73,8 @@ def resample_audio(config: MagPIEConfig):
     processed = 0
     sorted_paths = sorted(audio_paths)
     for rel_path in tqdm(sorted_paths, desc="  Resampling", unit="file"):
-        src_path = repo_root / rel_path
+        audio_p = Path(rel_path)
+        src_path = audio_p if audio_p.is_absolute() else repo_root / rel_path
         out_name = Path(rel_path).name
         out_path = resampled_dir / out_name
 
@@ -213,7 +214,7 @@ def convert_manifest_to_nemo(
                 "audio_filepath": str(resampled_path),
                 "text": entry["text"],
                 "duration": entry.get("duration", 0.0),
-                "speaker": int(speaker_id) if speaker_id.isdigit() else 0,
+                "speaker": int(speaker_id) if isinstance(speaker_id, int) or str(speaker_id).isdigit() else 0,
             }
 
             if codes_path.exists():

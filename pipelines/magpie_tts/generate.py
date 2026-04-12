@@ -162,8 +162,11 @@ def generate(model, text, speaker_idx=0, ref_audio_path=None, ref_text=None, **k
     if all_codes:
         concat_codes = torch.cat(all_codes, dim=1).unsqueeze(0)
         codes_lens = torch.tensor([concat_codes.shape[2]], device='cuda', dtype=torch.long)
-        audio, audio_lens, _ = model.codes_to_audio(concat_codes, codes_lens)
-        audio_out = audio[0, :audio_lens[0]].cpu().float().unsqueeze(0)
+        decode_out = model._codec_model.decode(tokens=concat_codes, tokens_len=codes_lens)
+        audio = decode_out[0] if isinstance(decode_out, tuple) else decode_out
+        if audio.dim() == 3:
+            audio = audio.squeeze(1)
+        audio_out = audio[0].cpu().float().unsqueeze(0)
         elapsed = time.time() - start
         duration = audio_out.shape[-1] / SAMPLE_RATE
         rtf = elapsed / duration if duration > 0 else 0
